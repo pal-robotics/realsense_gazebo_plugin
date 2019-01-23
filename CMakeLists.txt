@@ -39,14 +39,7 @@ add_library(
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 
-add_executable(test_realsense_streams test/realsense_streams_test.cpp)
-target_link_libraries(
-    test_realsense_streams
-    ${catkin_LIBRARIES}
-    ${GTEST_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
 )
-add_dependencies(test_realsense_streams ${catkin_EXPORTED_TARGETS})
 
 install(
     TARGETS
