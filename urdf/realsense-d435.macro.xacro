@@ -1,0 +1,200 @@
+<?xml version="1.0" ?>
+<!--Develped by Daniel Ordonez 22.05.2018 - daniels.ordonez@gmail.com
+    INFORMATION:
+        This xacro file a URDF representation of the intel real sense d435 with the
+        virtual links representing the position of:
+            * The RGB color camera
+            * Infrared 1 camera
+            * Infrared 2 camera
+            * Virtual depth coordinate frame
+        Configured to work with Gazebo if desired.
+-->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<xacro:macro name="realsense-d435" params="prefix parent *origin">
+
+    <!-- Camera link -->
+    <link name="${prefix}d435_camera">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://realsense_gazebo_plugin/models/realsense_camera/meshes/d435.dae"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.0078 0.130 0.0192"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.0615752"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="9.108e-05"
+                     ixy="0"
+                     ixz="0"
+                     iyy="2.51e-06"
+                     iyz="0"
+                     izz="8.931e-05"
+            />
+        </inertial>
+    </link>
+
+    <!-- Connect camera to parent frame-->
+    <joint name="${prefix}realsense_joint" type="fixed">
+        <parent link="${parent}"/>
+        <child link="${prefix}d435_camera"/>
+        <xacro:insert_block name="origin"/>
+    </joint>
+
+    <!-- Virtual links representing the cameras positons and orientations-->
+    <link name="${prefix}color" />
+    <link name="${prefix}depth" />
+    <link name="${prefix}ired1" />
+    <link name="${prefix}ired2" />
+
+    <!-- Joints positioning the virtual links with respect to the camera main link-->
+    <joint name="${prefix}color_joint" type="fixed">
+        <parent link="${prefix}d435_camera" />
+        <child link="${prefix}color" />
+        <!-- <origin xyz="0 -0.046 0.004" rpy="0 0 0"/> -->
+        <!-- The default position is change since in Rviz the cloud depth axis is Z not X-->
+        <origin xyz="0 -0.046 0.004" rpy="${pi/2} ${pi} ${pi/2}"/>
+    </joint>
+
+    <joint name="${prefix}depth_joint" type="fixed">
+        <parent link="${prefix}d435_camera" />
+        <child link="${prefix}depth" />
+        <origin xyz="0 -0.03 0.004" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="${prefix}ired1_joint" type="fixed">
+        <parent link="${prefix}d435_camera" />
+        <child link="${prefix}ired1" />
+        <origin xyz="0 -0.06 0.004" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="${prefix}ired2_joint" type="fixed">
+        <parent link="${prefix}d435_camera" />
+        <child link="${prefix}ired2" />
+        <origin xyz="0 0.01 0.004" rpy="0 0 0"/>
+    </joint>
+
+<!-- **********************************************************-->
+<!-- GAZEBO DEFINITIONS ***************************************-->
+
+    <!-- Load plugin to the model ("robot" in urdf format)-->
+    <gazebo>
+        <plugin name="realsense_plugin" filename="librealsense_gazebo_plugin.so"/>
+        <!--<pose frame="">0 0 0.015 0 0 0</pose>-->
+    </gazebo>
+
+    <!-- Load parameters to model's main link-->
+    <gazebo reference="${prefix}d435_camera">
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+        <!--<mu>1</mu>-->
+        <mu2>1</mu2>
+        <fdir1>0 0 0</fdir1>
+        <!--<slip1>0</slip1>
+        <slip2>0</slip2>-->
+        <kp>1e+13</kp>
+        <kd>1</kd>
+        <!--<max_vel>0.01</max_vel>
+        <min_depth>0</min_depth>-->
+
+        <sensor name="color" type="camera">
+            <pose frame="">0 -0.046 0.004 0 0 0</pose>
+            <camera name="${prefix}d435_camera">
+            <horizontal_fov>1.047</horizontal_fov>
+            <image>
+                <width>640</width>
+                <height>480</height>
+                <format>RGB_INT8</format>
+            </image>
+            <clip>
+                <near>0.1</near>
+                <far>100</far>
+            </clip>
+            <noise>
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.007</stddev>
+            </noise>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>60</update_rate>
+            <visualize>1</visualize>
+        </sensor>
+        <sensor name="ired1" type="camera">
+            <pose frame="">0 -0.06 0.004 0 0 0</pose>
+            <camera name="${prefix}d435_camera">
+            <horizontal_fov>1.047</horizontal_fov>
+            <image>
+                <width>640</width>
+                <height>480</height>
+                <format>L_INT8</format>
+            </image>
+            <clip>
+                <near>0.1</near>
+                <far>100</far>
+            </clip>
+            <noise>
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.05</stddev>
+            </noise>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>60</update_rate>
+            <visualize>0</visualize>
+        </sensor>
+        <sensor name="ired2" type="camera">
+            <pose frame="">0 0.01 0.004 0 0 0</pose>
+            <camera name="${prefix}d435_camera">
+            <horizontal_fov>1.047</horizontal_fov>
+            <image>
+                <width>640</width>
+                <height>480</height>
+                <format>L_INT8</format>
+            </image>
+            <clip>
+                <near>0.1</near>
+                <far>100</far>
+            </clip>
+            <noise>
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.05</stddev>
+            </noise>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>60</update_rate>
+            <visualize>0</visualize>
+        </sensor>
+        <sensor name="depth" type="depth">
+            <pose frame="">0 -0.03 0.004 0 0 0</pose>
+            <camera name="${prefix}d435_camera">
+            <horizontal_fov>1.047</horizontal_fov>
+            <image>
+                    <width>640</width>
+                    <height>480</height>
+            </image>
+            <clip>
+                    <near>0.1</near>
+                    <far>100</far>
+            </clip>
+            <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.100</stddev>
+            </noise>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>60</update_rate>
+            <visualize>0</visualize>
+        </sensor>
+    </gazebo>
+
+</xacro:macro>
+</robot>

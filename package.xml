@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+  <name>realsense_gazebo_plugin</name>
+  <version>0.0.0</version>
+  <description>Intel RealSense R200 Gazebo plugin package</description>
+  <maintainer email="missrisalaheddine@gmail.com">Salah-Eddine Missri</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>gazebo_ros</build_depend>
+  <build_depend>roscpp</build_depend>
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>depth_image_proc</run_depend>
+
+  <export>
+    <gazebo_ros
+      plugin_path="${prefix}/lib"
+      gazebo_media_path="${prefix}"
+      gazebo_model_path="${prefix}/models"
+      />
+  </export>
+</package>
