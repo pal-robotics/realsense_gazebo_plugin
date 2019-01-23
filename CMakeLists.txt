@@ -35,11 +35,10 @@ add_library(
     ${PROJECT_NAME}
     src/RealSensePlugin.cpp
     src/gazebo_ros_realsense.cpp
-)
+    )
+
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
-
-)
 
 install(
     TARGETS

@@ -51,7 +51,7 @@ aluminum peripherial evaluation case.
       <visual>
       <origin xyz="${d435_cam_mount_from_center_offset} 0.0 ${d435_cam_height/2}" rpy="${M_PI/2} 0 ${M_PI/2}"/>
         <geometry>
-	        <mesh filename="package://realsense_gazebo_plugin/models/realsense_camera/meshes/d435.dae" />
+	        <mesh filename="package://realsense_gazebo_plugin/meshes/d435.dae" />
         </geometry>
         <material name="aluminum"/>
       </visual>
