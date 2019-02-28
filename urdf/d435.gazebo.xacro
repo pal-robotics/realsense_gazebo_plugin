@@ -113,13 +113,13 @@
       	<depthUpdateRate>60.0</depthUpdateRate>
       	<colorUpdateRate>60.0</colorUpdateRate>
       	<infraredUpdateRate>60.0</infraredUpdateRate>
-      	<depthTopicName>depth/image_rect_raw</depthTopicName>
+      	<depthTopicName>depth/image_raw</depthTopicName>
       	<depthCameraInfoTopicName>depth/camera_info</depthCameraInfoTopicName>
       	<colorTopicName>color/image_raw</colorTopicName>
       	<colorCameraInfoTopicName>color/camera_info</colorCameraInfoTopicName>
-      	<infrared1TopicName>infra1/image_rect_raw</infrared1TopicName>
+      	<infrared1TopicName>infra1/image_raw</infrared1TopicName>
       	<infrared1CameraInfoTopicName>infra1/camera_info</infrared1CameraInfoTopicName>
-      	<infrared2TopicName>infra2/image_rect_raw</infrared2TopicName>
+      	<infrared2TopicName>infra2/image_raw</infrared2TopicName>
       	<infrared2CameraInfoTopicName>infra2/camera_info</infrared2CameraInfoTopicName>
       	<colorOpticalframeName>${color_optical_frame}</colorOpticalframeName>
       	<depthOpticalframeName>${depth_optical_frame}</depthOpticalframeName>
