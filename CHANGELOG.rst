@@ -2,8 +2,8 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2019-03-01)
+------------------
 * Rm unnecessary dependees
 * Fix dependencies
 * Merge branch 'realsense' into 'master'

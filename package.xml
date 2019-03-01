@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>realsense_gazebo_plugin</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>Intel RealSense R200 Gazebo plugin package</description>
   <maintainer email="adria.roig@pal-robotics.com">Adria Roig</maintainer>
 
