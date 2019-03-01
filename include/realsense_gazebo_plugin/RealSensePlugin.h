@@ -25,22 +25,17 @@
 #include <gazebo/sensors/sensors.hh>
 #include <sdf/sdf.hh>
 
-#include <string>
 #include <memory>
+#include <string>
 
-namespace gazebo
-{
+namespace gazebo {
 #define DEPTH_CAMERA_NAME "depth"
 #define COLOR_CAMERA_NAME "color"
 #define IRED1_CAMERA_NAME "ired1"
 #define IRED2_CAMERA_NAME "ired2"
 
-struct CameraParams
-{
-  CameraParams()
-  {
-
-  }
+struct CameraParams {
+  CameraParams() {}
 
   std::string topic_name;
   std::string camera_info_topic_name;
@@ -48,11 +43,9 @@ struct CameraParams
 };
 
 /// \brief A plugin that simulates Real Sense camera streams.
-class RealSensePlugin : public ModelPlugin
-{
+class RealSensePlugin : public ModelPlugin {
   /// \brief Constructor.
 public:
-
   RealSensePlugin();
 
   /// \brief Destructor.
@@ -71,10 +64,10 @@ public:
 
   /// \brief Callback that publishes a received Camera Frame as an
   /// ImageStamped message.
-  virtual void OnNewFrame(const rendering::CameraPtr cam, const transport::PublisherPtr pub);
+  virtual void OnNewFrame(const rendering::CameraPtr cam,
+                          const transport::PublisherPtr pub);
 
 protected:
-
   /// \brief Pointer to the model containing the plugin.
   physics::ModelPtr rsModel;
 

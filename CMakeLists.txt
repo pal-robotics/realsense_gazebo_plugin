@@ -8,8 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
     image_transport
     camera_info_manager
     sensor_msgs
-    cv_bridge
-    rostest
 )
 find_package(Boost REQUIRED COMPONENTS thread)
 find_package(gazebo REQUIRED)
@@ -21,6 +19,9 @@ catkin_package(
     DEPENDS
         roscpp
         gazebo_ros
+        image_transport
+        camera_info_manager
+        sensor_msgs
 )
 
 include_directories(

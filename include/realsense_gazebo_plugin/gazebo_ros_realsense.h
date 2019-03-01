@@ -8,17 +8,15 @@
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/image_encodings.h>
 
-#include <image_transport/image_transport.h>
 #include <camera_info_manager/camera_info_manager.h>
+#include <image_transport/image_transport.h>
 
-#include <string>
 #include <memory>
+#include <string>
 
-namespace gazebo
-{
+namespace gazebo {
 /// \brief A plugin that simulates Real Sense camera streams.
-class GazeboRosRealsense : public RealSensePlugin
-{
+class GazeboRosRealsense : public RealSensePlugin {
   /// \brief Constructor.
 public:
   GazeboRosRealsense();
@@ -39,18 +37,20 @@ public:
   /// \brief Callback that publishes a received Camera Frame as an
   /// ImageStamped message.
 public:
-  virtual void OnNewFrame(const rendering::CameraPtr cam, const transport::PublisherPtr pub);
+  virtual void OnNewFrame(const rendering::CameraPtr cam,
+                          const transport::PublisherPtr pub);
 
 protected:
-  boost::shared_ptr<camera_info_manager::CameraInfoManager> camera_info_manager_;
+  boost::shared_ptr<camera_info_manager::CameraInfoManager>
+      camera_info_manager_;
 
   /// \brief A pointer to the ROS node.
   ///  A node will be instantiated if it does not exist.
 protected:
-  ros::NodeHandle* rosnode_;
+  ros::NodeHandle *rosnode_;
 
 private:
-  image_transport::ImageTransport* itnode_;
+  image_transport::ImageTransport *itnode_;
 
 protected:
   image_transport::CameraPublisher color_pub_, ir1_pub_, ir2_pub_, depth_pub_;
