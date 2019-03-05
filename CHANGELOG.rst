@@ -2,8 +2,8 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2019-03-05)
+------------------
 * Merge branch 'realsense' into 'master'
   Fix missing installation files
   See merge request device/realsense_gazebo_plugin!2
