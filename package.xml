@@ -2,10 +2,20 @@
 <package format="2">
   <name>realsense_gazebo_plugin</name>
   <version>0.0.2</version>
-  <description>Intel RealSense R200 Gazebo plugin package</description>
+  <description>Intel RealSense D435 Gazebo plugin package</description>
+  
+  <maintainer email="sergey.dorodnicov@intel.com">Sergey Dorodnicov</maintainer>
+  <maintainer email="doron.hirshberg@intel.com">Doron Hirshberg</maintainer>
+  <maintainer email="missrisalaheddine@gmail.com">Salah-Eddine Missri</maintainer>
   <maintainer email="adria.roig@pal-robotics.com">Adria Roig</maintainer>
 
-  <license>Proprietary</license>
+  <author email="sergey.dorodnicov@intel.com">Sergey Dorodnicov</author>
+  <author email="doron.hirshberg@intel.com">Doron Hirshberg</author>
+
+  <license>Apache 2.0</license>
+
+  <url type="website">http://www.ros.org/wiki/RealSense</url>
+  <url type="bugtracker">https://github.com/intel-ros/realsense/issues</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 

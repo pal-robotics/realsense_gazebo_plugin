@@ -1,4 +1,11 @@
 <?xml version="1.0"?>
+
+<!--
+License: Apache 2.0. See LICENSE file in root directory.
+Copyright(c) 2017 PAL Robotics, S.L. All Rights Reserved
+
+This is the Gazebo URDF model for the Intel RealSense D435 camera
+-->
   
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   
