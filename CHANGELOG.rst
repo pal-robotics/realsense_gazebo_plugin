@@ -2,6 +2,11 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix licenses for public release
+* Contributors: Adria Roig
+
 0.0.2 (2019-03-05)
 ------------------
 * Merge branch 'realsense' into 'master'
