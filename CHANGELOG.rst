@@ -2,6 +2,11 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Adapted to latest gazebo API changes
+* Contributors: Jordan Palacios
+
 0.0.3 (2019-03-28)
 ------------------
 * Fix licenses for public release
