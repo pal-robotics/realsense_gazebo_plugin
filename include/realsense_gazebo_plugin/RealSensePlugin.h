@@ -86,6 +86,9 @@ protected:
   /// \brief Pointer to the Infrared2 Camera Renderer.
   rendering::CameraPtr ired2Cam;
 
+  /// \brief String to hold the camera prefix
+  std::string prefix;
+
   /// \brief Pointer to the transport Node.
   transport::NodePtr transportNode;
 
