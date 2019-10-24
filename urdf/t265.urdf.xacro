@@ -11,7 +11,7 @@ aluminum peripherial evaluation case.
 <robot name="sensor_t265_gazebo" xmlns:xacro="http://ros.org/wiki/xacro">
   <!--File includes-->
 
-  <xacro:macro name="sensor_t265_gazebo" params="parent name:=camera *origin">
+  <xacro:macro name="sensor_t265_gazebo" params="parent name:=camera topics_ns:=camera *origin">
     <xacro:property name="M_PI" value="3.1415926535897931" />
   
     <!-- The following values are approximate, and the camera node
