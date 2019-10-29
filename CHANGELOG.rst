@@ -2,8 +2,8 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.4 (2019-10-29)
+------------------
 * Merge branch 'multi-realsense' into 'erbium-devel'
   Update plugin to support multiple realsense camera's
   See merge request device/realsense_gazebo_plugin!6
