@@ -2,6 +2,14 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'mesh-fix' into 'erbium-devel'
+  Mesh fix
+  See merge request device/realsense_gazebo_plugin!9
+* fixed the issue with mesh location
+* Contributors: Adria Roig, Sai Kishor Kothakota
+
 0.0.4 (2019-10-29)
 ------------------
 * Merge branch 'multi-realsense' into 'erbium-devel'
