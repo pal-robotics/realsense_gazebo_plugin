@@ -34,6 +34,7 @@ RealSensePlugin::RealSensePlugin() {
   this->ired1Cam = nullptr;
   this->ired2Cam = nullptr;
   this->colorCam = nullptr;
+  this->prefix = "";
 }
 
 /////////////////////////////////////////////////
@@ -108,6 +109,8 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
       pointCloudTopic_ = _sdf->GetValue()->GetAsString();
     else if (name == "pointCloudCutoff")
       _sdf->GetValue()->Get(pointCloudCutOff_);
+    else if (name == "prefix")
+      this->prefix = _sdf->GetValue()->GetAsString();
     else if (name == "robotNamespace")
       break;
     else
@@ -127,17 +130,17 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
 
   // Get Cameras Renderers
   this->depthCam = std::dynamic_pointer_cast<sensors::DepthCameraSensor>(
-                       smanager->GetSensor(DEPTH_CAMERA_NAME))
+                       smanager->GetSensor(prefix + DEPTH_CAMERA_NAME))
                        ->DepthCamera();
 
   this->ired1Cam = std::dynamic_pointer_cast<sensors::CameraSensor>(
-                       smanager->GetSensor(IRED1_CAMERA_NAME))
+                       smanager->GetSensor(prefix + IRED1_CAMERA_NAME))
                        ->Camera();
   this->ired2Cam = std::dynamic_pointer_cast<sensors::CameraSensor>(
-                       smanager->GetSensor(IRED2_CAMERA_NAME))
+                       smanager->GetSensor(prefix + IRED2_CAMERA_NAME))
                        ->Camera();
   this->colorCam = std::dynamic_pointer_cast<sensors::CameraSensor>(
-                       smanager->GetSensor(COLOR_CAMERA_NAME))
+                       smanager->GetSensor(prefix + COLOR_CAMERA_NAME))
                        ->Camera();
 
   // Check if camera renderers have been found successfuly
