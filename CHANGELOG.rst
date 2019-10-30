@@ -2,6 +2,14 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'mesh-fix-ferrum' into 'ferrum-devel'
+  fixed the issue with mesh location
+  See merge request device/realsense_gazebo_plugin!10
+* fixed the issue with mesh location
+* Contributors: Adria Roig, Sai Kishor Kothakota
+
 1.0.1 (2019-10-30)
 ------------------
 * Merge branch 'multi-realsense-ferrum' into 'ferrum-devel'
