@@ -2,6 +2,14 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'multi-realsense-ferrum' into 'ferrum-devel'
+  Update plugin to support multiple realsense camera's
+  See merge request device/realsense_gazebo_plugin!7
+* Update plugin to support multiple realsense camera's
+* Contributors: Adria Roig, Sai Kishor Kothakota
+
 1.0.0 (2019-09-10)
 ------------------
 * Adapted to latest gazebo API changes
