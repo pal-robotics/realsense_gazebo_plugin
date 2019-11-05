@@ -2,6 +2,11 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add SYSTEM to include_directories
+* Contributors: Victor Lopez
+
 1.0.2 (2019-10-30)
 ------------------
 * Merge branch 'mesh-fix-ferrum' into 'ferrum-devel'
