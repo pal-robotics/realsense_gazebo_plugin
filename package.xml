@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>realsense_gazebo_plugin</name>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <description>Intel RealSense D435 Gazebo plugin package</description>
   
   <maintainer email="sergey.dorodnicov@intel.com">Sergey Dorodnicov</maintainer>
