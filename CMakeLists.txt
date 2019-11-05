@@ -23,7 +23,9 @@ catkin_package(
 )
 
 include_directories(
-    include
+    include)
+include_directories(
+    SYSTEM
     ${catkin_INCLUDE_DIRS}
     ${GAZEBO_INCLUDE_DIRS}
 )
