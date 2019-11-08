@@ -2,6 +2,16 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'ari' into 'erbium-devel'
+  Ari
+  See merge request device/realsense_gazebo_plugin!8
+* fixed some issue with solid model warning
+* Added the topic_ns param for the t265 camera
+* Added T265 URDF
+* Contributors: Sai Kishor Kothakota, Victor Lopez, alessandrodifava
+
 0.0.5 (2019-10-30)
 ------------------
 * Merge branch 'mesh-fix' into 'erbium-devel'
