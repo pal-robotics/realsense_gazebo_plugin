@@ -2,8 +2,8 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.6 (2019-11-08)
+------------------
 * Merge branch 'ari' into 'erbium-devel'
   Ari
   See merge request device/realsense_gazebo_plugin!8
