@@ -14,7 +14,7 @@ aluminum peripherial evaluation case.
 
   <xacro:macro name="sensor_t265_gazebo" params="parent name:=camera topics_ns:=camera *origin">
     <xacro:property name="M_PI" value="3.1415926535897931" />
-  
+
     <!-- The following values are approximate, and the camera node
      publishing TF values with actual calibrated camera extrinsic values -->
     <xacro:property name="fisheye1_offset_x" value="-0.0411"/>
@@ -73,14 +73,14 @@ aluminum peripherial evaluation case.
     <link name="${name}_fisheye2_rgb_frame"/>
 
     <joint name="${name}_fisheye1_optical_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="${M_PI/2} -${M_PI/2} ${M_PI/2}"/>
+      <origin xyz="0 0 0" rpy="-${M_PI/2} 0 -${M_PI/2}"/>
       <parent link="${name}_fisheye1_rgb_frame"/>
       <child link="${name}_fisheye1_optical_frame" />
     </joint>
     <link name="${name}_fisheye1_optical_frame"/>
 
     <joint name="${name}_fisheye2_optical_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="${M_PI/2} -${M_PI/2} ${M_PI/2}"/>
+      <origin xyz="0 0 0" rpy="-${M_PI/2} 0 -${M_PI/2}"/>
       <parent link="${name}_fisheye2_rgb_frame"/>
       <child link="${name}_fisheye2_optical_frame" />
     </joint>
