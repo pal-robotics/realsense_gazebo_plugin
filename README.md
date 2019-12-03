@@ -1,7 +1,6 @@
 # Intel RealSense Gazebo ROS plugin
 
-This package is a Gazebo ROS plugin for the Intel D435 realsense camera, to add it in the [REEM-C](http://wiki.ros.org/Robots/REEM-C) 
-Gazebo simulation.
+This package is a Gazebo ROS plugin for the Intel D435 realsense camera.
  
 ## Acknowledgement
 
