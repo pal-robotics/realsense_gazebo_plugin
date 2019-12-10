@@ -2,6 +2,14 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'gazebo_xacro_ferrum' into 'ferrum-devel'
+  remove gazebo and URDF xacro
+  See merge request device/realsense_gazebo_plugin!12
+* remove gazebo and URDF xacro
+* Contributors: Sai Kishor Kothakota, Victor Lopez
+
 1.0.3 (2019-11-05)
 ------------------
 * Add SYSTEM to include_directories
