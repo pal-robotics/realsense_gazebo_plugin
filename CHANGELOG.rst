@@ -2,6 +2,19 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'gazebo_xacro' into 'erbium-devel'
+  remove gazebo and URDF xacro
+  See merge request device/realsense_gazebo_plugin!11
+* remove gazebo and URDF xacro
+* Fix model type and parameters
+* First version of working fisheye
+* Don't visualize cameras on gazebo
+* Put correct fov for fisheye cameras
+* Add gazebo for t265
+* Contributors: Sai Kishor Kothakota, Victor Lopez
+
 0.0.6 (2019-11-08)
 ------------------
 * Merge branch 'ari' into 'erbium-devel'
