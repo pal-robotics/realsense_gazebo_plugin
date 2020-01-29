@@ -126,7 +126,7 @@ protected:
 
   bool pointCloud_ = false;
   std::string pointCloudTopic_;
-  double pointCloudCutOff_;
+  double pointCloudCutOff_, pointCloudCutOffMax_;
 
   double colorUpdateRate_;
   double infraredUpdateRate_;
