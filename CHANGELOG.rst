@@ -2,6 +2,14 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'pointcloud' into 'erbium-devel'
+  added methods to publish the pointcloud information
+  See merge request device/realsense_gazebo_plugin!13
+* added methods to publish the pointcloud information
+* Contributors: Sai Kishor Kothakota, Victor Lopez
+
 0.0.7 (2019-12-10)
 ------------------
 * Merge branch 'gazebo_xacro' into 'erbium-devel'
