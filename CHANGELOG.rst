@@ -2,6 +2,15 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'pointcloud_ferrum' into 'ferrum-devel'
+  added methods to publish the pointcloud information
+  See merge request device/realsense_gazebo_plugin!14
+* added methods to publish the pointcloud information
+* Update readme to remove explicit mention to REEM-C
+* Contributors: Sai Kishor Kothakota, Victor Lopez
+
 1.0.4 (2019-12-10)
 ------------------
 * Merge branch 'gazebo_xacro_ferrum' into 'ferrum-devel'
