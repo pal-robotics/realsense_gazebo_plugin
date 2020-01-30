@@ -2,8 +2,8 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2020-01-30)
+------------------
 * Merge branch 'pointcloud_ferrum' into 'ferrum-devel'
   added methods to publish the pointcloud information
   See merge request device/realsense_gazebo_plugin!14
