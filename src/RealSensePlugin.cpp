@@ -35,6 +35,7 @@ RealSensePlugin::RealSensePlugin() {
   this->ired2Cam = nullptr;
   this->colorCam = nullptr;
   this->prefix = "";
+  this->pointCloudCutOffMax_ = 5.0;
 }
 
 /////////////////////////////////////////////////
@@ -109,6 +110,8 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
       pointCloudTopic_ = _sdf->GetValue()->GetAsString();
     else if (name == "pointCloudCutoff")
       _sdf->GetValue()->Get(pointCloudCutOff_);
+    else if (name == "pointCloudCutoffMax")
+      _sdf->GetValue()->Get(pointCloudCutOffMax_);
     else if (name == "prefix")
       this->prefix = _sdf->GetValue()->GetAsString();
     else if (name == "robotNamespace")
