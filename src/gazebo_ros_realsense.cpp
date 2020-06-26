@@ -251,6 +251,7 @@ sensor_msgs::CameraInfo cameraInfo(const sensor_msgs::Image &image,
   sensor_msgs::CameraInfo info_msg;
 
   info_msg.header = image.header;
+  info_msg.distortion_model = "plumb_bob";
   info_msg.height = image.height;
   info_msg.width = image.width;
 
