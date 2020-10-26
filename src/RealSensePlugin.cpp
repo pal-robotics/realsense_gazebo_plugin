@@ -124,16 +124,12 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
     _sdf = _sdf->GetNextElement();
   } while (_sdf);
-  std::cout << "GOT ALL PARAMS FROM SDF" << std::endl;
 
   // Store a pointer to the this model
   this->rsModel = _model;
 
   // Store a pointer to the world
   this->world = this->rsModel->GetWorld();
-
-  std::cout << "GOT MODEL AND WORLD POINTERS" << std::endl;
-
 
   // Sensors Manager
   sensors::SensorManager * smanager = sensors::SensorManager::Instance();
@@ -160,9 +156,6 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     smanager->GetSensor(prefix + COLOR_CAMERA_NAME))
     ->Camera();
 
-  std::cout << "GOT ALL CAMERA RENDERERS" << std::endl;
-
-
   // Check if camera renderers have been found successfuly
   if (!this->depthCam) {
     std::cerr << "RealSensePlugin: Depth Camera has not been found" <<
@@ -184,9 +177,6 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
       std::endl;
     return;
   }
-
-  std::cout << "ALL CAMERA RENDERERS HAS BEEN FOUND" << std::endl;
-
 
   // Resize Depth Map dimensions
   try {
