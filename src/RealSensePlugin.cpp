@@ -134,13 +134,6 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   // Sensors Manager
   sensors::SensorManager * smanager = sensors::SensorManager::Instance();
 
-  std::cout << "GOT SENSOR MANAGER POINTER" << std::endl;
-  double x = smanager->NextRequiredTimestamp();
-
-  std::cout << "GOT NextRequiredTimestamp" << std::endl;
-  std::cout << "GOT NextRequiredTimestamp" << prefix + DEPTH_CAMERA_NAME << std::endl;
-
-
   // Get Cameras Renderers
   this->depthCam = std::dynamic_pointer_cast<sensors::DepthCameraSensor>(
     smanager->GetSensor(prefix + DEPTH_CAMERA_NAME))

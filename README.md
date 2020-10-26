@@ -1,6 +1,9 @@
 # Intel RealSense Gazebo ROS plugin
 
 This package is a Gazebo ROS plugin for the Intel D435 realsense camera.
+
+## Note
+This branch is aimed for ROS2, if you are ROS1 user you can see the other branches(e.g melodic)
  
 ## Acknowledgement
 
@@ -11,7 +14,7 @@ This package also includes the work developed by Intel Corporation with the ROS 
 ## Example usage with a custom robot
 
 Note that this was tested for the ROS2 branch with ROS Foxy distro. A turtlebot3 like custom robot model was used. 
-In custom robot's `model.sdf`, we should attach the link, sensors attached to link and joint as following; 
+In custom robot's `model.sdf`, we should attach the link, sensors, joint  and plugin block as following; 
 
 ```xml
     <link name="realsense_link">
@@ -139,10 +142,34 @@ In custom robot's `model.sdf`, we should attach the link, sensors attached to li
       <child>realsense_link</child>
       <pose>0.4 0 0.4 0 0 0</pose>
     </joint>
+
+    <plugin name="camera" filename="librealsense_gazebo_plugin.so">
+      <prefix>camera</prefix>
+      <depthUpdateRate>30.0</depthUpdateRate>
+      <colorUpdateRate>30.0</colorUpdateRate>
+      <infraredUpdateRate>1.0</infraredUpdateRate>
+      <depthTopicName>aligned_depth_to_color/image_raw</depthTopicName>
+      <depthCameraInfoTopicName>depth/camera_info</depthCameraInfoTopicName>
+      <colorTopicName>color/image_raw</colorTopicName>
+      <colorCameraInfoTopicName>color/camera_info</colorCameraInfoTopicName>
+      <infrared1TopicName>infra1/image_raw</infrared1TopicName>
+      <infrared1CameraInfoTopicName>infra1/camera_info</infrared1CameraInfoTopicName>
+      <infrared2TopicName>infra2/image_raw</infrared2TopicName>
+      <infrared2CameraInfoTopicName>infra2/camera_info</infrared2CameraInfoTopicName>
+      <colorOpticalframeName>camera_color_optical_frame</colorOpticalframeName>
+      <depthOpticalframeName>camera_depth_optical_frame</depthOpticalframeName>
+      <infrared1OpticalframeName>camera_left_ir_optical_frame</infrared1OpticalframeName>
+      <infrared2OpticalframeName>camera_right_ir_optical_frame</infrared2OpticalframeName>
+      <rangeMinDepth>0.3</rangeMinDepth>
+      <rangeMaxDepth>3.0</rangeMaxDepth>
+      <pointCloud>true</pointCloud>
+      <pointCloudTopicName>depth/color/points</pointCloudTopicName>
+      <pointCloudCutoff>0.3</pointCloudCutoff>
+    </plugin>
 ```
 
-Finally we should define the joint, links of each camera(color, depth, ir_right, ir_left) W.R.T robot body, in the description package of robot.
-In URDF of the robot add following; 
+Finally we should define the joint, links of each camera(color, depth, ir_right, ir_left) W.R.T robot body, 
+In URDF(usually in `xxx_description` package) of the robot add following; 
 
 ```xml
   <link name="camera_bottom_screw_frame">
