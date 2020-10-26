@@ -10,8 +10,8 @@ This package also includes the work developed by Intel Corporation with the ROS 
 
 ## Example usage with a custom robot
 
-Note that this was tested for the ROS2 branch with ROS Fosy distro. A turtlebot3 like custom robot model was used. 
-In custom robot's model.sdf, we should attach the link and sensors as; 
+Note that this was tested for the ROS2 branch with ROS Foxy distro. A turtlebot3 like custom robot model was used. 
+In custom robot's `model.sdf`, we should attach the link, sensors attached to link and joint as following; 
 
 ```xml
     <link name="realsense_link">
@@ -139,4 +139,102 @@ In custom robot's model.sdf, we should attach the link and sensors as;
       <child>realsense_link</child>
       <pose>0.4 0 0.4 0 0 0</pose>
     </joint>
+```
+
+Finally we should define the joint, links of each camera(color, depth, ir_right, ir_left) W.R.T robot body, in the description package of robot.
+In URDF of the robot add following; 
+
+```xml
+  <link name="camera_bottom_screw_frame">
+    <visual>
+      <geometry>
+        <mesh filename="package://chiconybot_description/meshes/sensors/d435.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://chiconybot_description/meshes/sensors/d435.dae" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="camera_link"></link>
+
+  <link name="camera_depth_frame"></link>
+
+  <link name="camera_depth_optical_frame"></link>
+
+  <link name="camera_color_frame"></link>
+
+  <link name="camera_color_optical_frame"></link>
+
+  <link name="camera_left_ir_frame"></link>
+
+  <link name="camera_left_ir_optical_frame"></link>
+
+  <link name="camera_right_ir_frame"></link>
+
+  <link name="camera_right_ir_optical_frame"></link>
+
+
+   <joint name="camera_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="camera_bottom_screw_frame" />
+    <pose xyz="0.4 0 0.25" rpy="0 0 0" />
+  </joint>
+
+  <joint name="camera_link_joint" type="fixed">
+    <parent link="camera_bottom_screw_frame" />
+    <child link="camera_link" />
+    <pose xyz="0 0.0175 0.0125 " rpy="0 0 0" />
+  </joint>
+
+  <joint name="camera_depth_joint" type="fixed">
+    <parent link="camera_link" />
+    <child link="camera_depth_frame" />
+    <pose xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+
+  <joint name="camera_depth_optical_joint" type="fixed">
+    <parent link="camera_depth_frame" />
+    <child link="camera_depth_optical_frame" />
+    <pose xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+  </joint>
+
+  <joint name="camera_color_joint" type="fixed">
+    <parent link="camera_depth_frame" />
+    <child link="camera_color_frame" />
+    <pose xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+
+  <joint name="camera_color_optical_joint" type="fixed">
+    <parent link="camera_color_frame" />
+    <child link="camera_color_optical_frame" />
+    <pose xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+  </joint>
+
+  <joint name="camera_left_ir_joint" type="fixed">
+    <parent link="camera_depth_frame" />
+    <child link="camera_left_ir_frame" />
+    <pose xyz="0 0 0 " rpy="0 0 0 " />
+  </joint>
+
+  <joint name="camera_left_ir_optical_joint" type="fixed">
+    <parent link="camera_left_ir_frame" />
+    <child link="camera_left_ir_optical_frame" />
+    <pose xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+  </joint>
+
+  <joint name="camera_right_ir_joint" type="fixed">
+    <parent link="camera_depth_frame" />
+    <child link="camera_right_ir_frame" />
+    <pose xyz="0 -0.050 0 " rpy="0 0 0" />
+  </joint>
+
+  <joint name="camera_right_ir_optical_joint" type="fixed">
+    <parent link="camera_right_ir_frame" />
+    <child link="camera_right_ir_optical_frame" />
+    <pose xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+  </joint>
+
 ```
