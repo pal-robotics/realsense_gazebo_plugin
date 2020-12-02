@@ -158,7 +158,7 @@ bool gazebo::GazeboRosgyroSensor::LoadParameters()
   }
   else
   {
-    topic_name = robot_namespace + "/imu_data";
+    topic_name = robot_namespace + "/gyro/sample";
     ROS_WARN_STREAM("missing <topicName>, set to /namespace/default: " << topic_name);
   }
 
