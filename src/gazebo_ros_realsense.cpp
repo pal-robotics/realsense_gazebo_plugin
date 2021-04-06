@@ -163,9 +163,19 @@ bool GazeboRosRealsense::FillPointCloudHelper(sensor_msgs::PointCloud2 &point_cl
       if (this->image_msg_.data.size() == rows_arg * cols_arg * 3)
       {
         // color
-        iter_rgb[0] = image_src[i * 3 + j * cols_arg * 3 + 0];
-        iter_rgb[1] = image_src[i * 3 + j * cols_arg * 3 + 1];
-        iter_rgb[2] = image_src[i * 3 + j * cols_arg * 3 + 2];
+        if (this->image_msg_.encoding == sensor_msgs::image_encodings::RGB8) {
+          iter_rgb[2] = image_src[i * 3 + j * cols_arg * 3 + 0];
+          iter_rgb[1] = image_src[i * 3 + j * cols_arg * 3 + 1];
+          iter_rgb[0] = image_src[i * 3 + j * cols_arg * 3 + 2];
+        }
+        else if (this->image_msg_.encoding == sensor_msgs::image_encodings::BGR8) {
+          iter_rgb[0] = image_src[i * 3 + j * cols_arg * 3 + 0];
+          iter_rgb[1] = image_src[i * 3 + j * cols_arg * 3 + 1];
+          iter_rgb[2] = image_src[i * 3 + j * cols_arg * 3 + 2];
+        }
+        else {
+          throw std::runtime_error("unsupported colour encoding: " + this->image_msg_.encoding);
+        }
       }
       else if (this->image_msg_.data.size() == rows_arg * cols_arg)
       {
