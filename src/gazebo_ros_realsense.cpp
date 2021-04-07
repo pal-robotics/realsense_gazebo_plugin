@@ -40,6 +40,10 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
 
   this->itnode_ = new image_transport::ImageTransport(*this->rosnode_);
 
+  // set 'png' compression format for depth images
+  rosnode_->setParam(rosnode_->resolveName(cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name) + "/compressed/format", "png");
+  rosnode_->setParam(rosnode_->resolveName(cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name) + "/compressed/png_level", 1);
+
   this->color_pub_ = this->itnode_->advertiseCamera(
       cameraParamsMap_[COLOR_CAMERA_NAME].topic_name, 2);
   this->ir1_pub_ = this->itnode_->advertiseCamera(
