@@ -284,6 +284,7 @@ sensor_msgs::CameraInfo cameraInfo(const sensor_msgs::Image &image,
   info_msg.P[6] = info_msg.K[5];
   info_msg.P[10] = info_msg.K[8];
 
+  info_msg.D = std::vector<double>(5, 0.0);
   //    info_msg.roi.do_rectify = true;
 
   return info_msg;
