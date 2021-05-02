@@ -27,7 +27,7 @@
 
   <export>
     <gazebo_ros
-      plugin_path="${prefix}/lib"
+      plugin_path="$(dirname $(catkin_find --first-only librealsense_gazebo_plugin.so))"
       gazebo_media_path="${prefix}"
       gazebo_model_path="${prefix}/models"
       />
