@@ -58,6 +58,11 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
   this->itnode_ = new image_transport::ImageTransport(this->node_);
 
+  // set 'png' compression format for depth images
+  // default functional parameters for compressed_image_transport to have lossless png compression
+  rosnode_->setParam(rosnode_->resolveName(cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name) + "/compressed/format", "png");
+  rosnode_->setParam(rosnode_->resolveName(cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name) + "/compressed/png_level", 1);
+
   this->color_pub_ = this->itnode_->advertiseCamera(
     cameraParamsMap_[COLOR_CAMERA_NAME].topic_name, 2);
   this->ir1_pub_ = this->itnode_->advertiseCamera(
@@ -184,10 +189,22 @@ bool GazeboRosRealsense::FillPointCloudHelper(
       uint8_t * image_src = (uint8_t *)(&(this->image_msg_.data[0]));
       if (this->image_msg_.data.size() == rows_arg * cols_arg * 3) {
         // color
-        iter_rgb[0] = image_src[i * 3 + j * cols_arg * 3 + 0];
-        iter_rgb[1] = image_src[i * 3 + j * cols_arg * 3 + 1];
-        iter_rgb[2] = image_src[i * 3 + j * cols_arg * 3 + 2];
-      } else if (this->image_msg_.data.size() == rows_arg * cols_arg) {
+        if (this->image_msg_.encoding == sensor_msgs::image_encodings::RGB8) {
+          iter_rgb[2] = image_src[i * 3 + j * cols_arg * 3 + 0];
+          iter_rgb[1] = image_src[i * 3 + j * cols_arg * 3 + 1];
+          iter_rgb[0] = image_src[i * 3 + j * cols_arg * 3 + 2];
+        }
+        else if (this->image_msg_.encoding == sensor_msgs::image_encodings::BGR8) {
+          iter_rgb[0] = image_src[i * 3 + j * cols_arg * 3 + 0];
+          iter_rgb[1] = image_src[i * 3 + j * cols_arg * 3 + 1];
+          iter_rgb[2] = image_src[i * 3 + j * cols_arg * 3 + 2];
+        }
+        else {
+          throw std::runtime_error("unsupported colour encoding: " + this->image_msg_.encoding);
+        }
+      }
+      else if (this->image_msg_.data.size() == rows_arg * cols_arg)
+      {
         // mono (or bayer?  @todo; fix for bayer)
         iter_rgb[0] = image_src[i + j * cols_arg];
         iter_rgb[1] = image_src[i + j * cols_arg];
