@@ -1,7 +1,7 @@
 #include "realsense_gazebo_plugin/gazebo_ros_realsense.h"
 #include <sensor_msgs/fill_image.hpp>
+#include <sensor_msgs/image_encodings.hpp>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
-
 
 namespace
 {
@@ -18,7 +18,6 @@ GZ_REGISTER_MODEL_PLUGIN(GazeboRosRealsense)
 
 GazeboRosRealsense::GazeboRosRealsense()
 {
-  std::cout << "CONSTRUCTED GAZEBO PLUGIN" << std::endl;
 }
 
 GazeboRosRealsense::~GazeboRosRealsense()
@@ -33,7 +32,6 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
   // Make sure the ROS node for Gazebo has already been initialized
   if (!rclcpp::ok()) {
-    std::cout << "ERROR : ROS IS NOT OK";
     RCLCPP_ERROR(
       node_->get_logger(),
       "A ROS node for Gazebo has not been initialized, unable "
@@ -43,25 +41,15 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
       "package");
     return;
   }
-  RCLCPP_ERROR(node_->get_logger(), "Realsense Gazebo ROS plugin loading.");
-  std::cout << "ROS IS OK LOADING REALSENSE PLUGIN" << std::endl;
-
+  RCLCPP_INFO(node_->get_logger(), "Realsense Gazebo ROS plugin loading.");
 
   RealSensePlugin::Load(_model, _sdf);
-
-  std::cout << "LOADED REALSENSE PLUGIN" << std::endl;
-
 
   // initialize camera_info_manager
   this->camera_info_manager_.reset(
     new camera_info_manager::CameraInfoManager(this->node_.get(), this->GetHandle()));
 
   this->itnode_ = new image_transport::ImageTransport(this->node_);
-
-  // set 'png' compression format for depth images
-  // default functional parameters for compressed_image_transport to have lossless png compression
-  rosnode_->setParam(rosnode_->resolveName(cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name) + "/compressed/format", "png");
-  rosnode_->setParam(rosnode_->resolveName(cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name) + "/compressed/png_level", 1);
 
   this->color_pub_ = this->itnode_->advertiseCamera(
     cameraParamsMap_[COLOR_CAMERA_NAME].topic_name, 2);
@@ -77,8 +65,7 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
       pointCloudTopic_, rclcpp::SystemDefaultsQoS());
   }
 
-  std::cout << "SETTED UP ALL PUBLISHERS" << std::endl;
-
+  RCLCPP_INFO(node_->get_logger(), "Loaded Realsense Gazebo ROS plugin.");
 }
 
 void GazeboRosRealsense::OnNewFrame(
