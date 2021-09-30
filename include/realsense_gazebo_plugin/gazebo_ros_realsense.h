@@ -7,9 +7,6 @@
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
-
-//#include <sensor_msgs/image_encodings.h>
-
 #include <camera_info_manager/camera_info_manager.hpp>
 #include <image_transport/image_transport.hpp>
 
@@ -66,7 +63,7 @@ protected:
   rclcpp::Node::SharedPtr node_;
 
 private:
-  image_transport::ImageTransport * itnode_;
+  std::unique_ptr<image_transport::ImageTransport> itnode_;
 
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
 
