@@ -63,7 +63,7 @@ protected:
   rclcpp::Node::SharedPtr node_;
 
 private:
-  image_transport::ImageTransport * itnode_;
+  std::unique_ptr<image_transport::ImageTransport> itnode_;
 
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
 
