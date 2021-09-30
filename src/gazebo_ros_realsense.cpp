@@ -49,7 +49,7 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   this->camera_info_manager_.reset(
     new camera_info_manager::CameraInfoManager(this->node_.get(), this->GetHandle()));
 
-  this->itnode_ = new image_transport::ImageTransport(this->node_);
+  this->itnode_.reset(new image_transport::ImageTransport(this->node_));
 
   this->color_pub_ = this->itnode_->advertiseCamera(
     cameraParamsMap_[COLOR_CAMERA_NAME].topic_name, 2);
