@@ -291,3 +291,4 @@ void RealSensePlugin::OnNewDepthFrame()
 
 /////////////////////////////////////////////////
 void RealSensePlugin::OnUpdate() {}
+
