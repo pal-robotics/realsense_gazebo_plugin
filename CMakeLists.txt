@@ -45,6 +45,7 @@ add_library(
     ${PROJECT_NAME} SHARED
     src/RealSensePlugin.cpp
     src/gazebo_ros_realsense.cpp
+    src/ros_qos_specifier.cpp
     )
 
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
