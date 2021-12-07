@@ -72,7 +72,7 @@ void GazeboRosRealsense::OnNewFrame(
   const rendering::CameraPtr cam,
   const transport::PublisherPtr pub)
 {
-  common::Time current_time = this->world->SimTime();
+  rclcpp::Time current_time = this->node_->now();
 
   // identify camera
   std::string camera_id = extractCameraName(cam->Name());
@@ -87,8 +87,8 @@ void GazeboRosRealsense::OnNewFrame(
   // copy data into image
   this->image_msg_.header.frame_id =
     this->cameraParamsMap_[camera_id].optical_frame;
-  this->image_msg_.header.stamp.sec = current_time.sec;
-  this->image_msg_.header.stamp.nanosec = current_time.nsec;
+  this->image_msg_.header.stamp.sec = current_time.seconds();
+  this->image_msg_.header.stamp.nanosec = current_time.nanoseconds();
 
   // set image encoding
   const std::map<std::string, std::string> supported_image_encodings = {
@@ -216,15 +216,15 @@ bool GazeboRosRealsense::FillPointCloudHelper(
 void GazeboRosRealsense::OnNewDepthFrame()
 {
   // get current time
-  common::Time current_time = this->world->SimTime();
+  rclcpp::Time current_time = this->node_->now();
 
   RealSensePlugin::OnNewDepthFrame();
 
   // copy data into image
   this->depth_msg_.header.frame_id =
     this->cameraParamsMap_[DEPTH_CAMERA_NAME].optical_frame;
-  this->depth_msg_.header.stamp.sec = current_time.sec;
-  this->depth_msg_.header.stamp.nanosec = current_time.nsec;
+  this->depth_msg_.header.stamp.sec = current_time.seconds();
+  this->depth_msg_.header.stamp.nanosec = current_time.nanoseconds();
 
   // set image encoding
   std::string pixel_format = sensor_msgs::image_encodings::TYPE_16UC1;
