@@ -117,10 +117,10 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
         } else if (name == "prefix") {
             this->prefix = _sdf->GetValue()->GetAsString();
         } else if (name == "color_qos") {
-            this->colorQos = _sdf->GetValue()->GetAsString(); }
-        else if (name == "pointcloud_qos") {
-            this->pointCloudQos = _sdf->GetValue()->GetAsString(); }
-        else if (name == "robotNamespace") {
+            this->colorQos = _sdf->GetValue()->GetAsString();
+        } else if (name == "pointcloud_qos") {
+            this->pointCloudQos = _sdf->GetValue()->GetAsString();
+        } else if (name == "robotNamespace") {
             break;
         } else {
             throw std::runtime_error("Ivalid parameter for RealSensePlugin");

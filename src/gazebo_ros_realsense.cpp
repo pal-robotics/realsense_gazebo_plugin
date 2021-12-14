@@ -49,42 +49,40 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   this->camera_info_manager_.reset(
     new camera_info_manager::CameraInfoManager(this->node_.get(), this->GetHandle()));
 
-    this->itnode_.reset(new ImageTransportWithSpecifiedQos(this->node_));
+  itnode_.reset(new ImageTransportWithSpecifiedQos(node_));
 
-    itnode_->specify_color_qos(this->color_pub_,cameraParamsMap_[COLOR_CAMERA_NAME].topic_name,colorQos);
-    itnode_->specify_color_qos(this->ir1_pub_,cameraParamsMap_[IRED1_CAMERA_NAME].topic_name,colorQos);
-    itnode_->specify_color_qos(this->ir2_pub_,cameraParamsMap_[IRED2_CAMERA_NAME].topic_name,colorQos);
-    itnode_->specify_color_qos(this->depth_pub_,cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name,colorQos);
+  itnode_->specify_color_qos(color_pub_,cameraParamsMap_[COLOR_CAMERA_NAME].topic_name,colorQos);
+  itnode_->specify_color_qos(ir1_pub_,cameraParamsMap_[IRED1_CAMERA_NAME].topic_name,colorQos);
+  itnode_->specify_color_qos(ir2_pub_,cameraParamsMap_[IRED2_CAMERA_NAME].topic_name,colorQos);
+  itnode_->specify_color_qos(depth_pub_,cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name,colorQos);
 
-    if (pointCloud_) {
-        if(pointCloudQos=="SensorDataQoS") {
-            this->pointcloud_pub_ = this->node_->create_publisher<sensor_msgs::msg::PointCloud2>(
-                    pointCloudTopic_, rclcpp::SensorDataQoS());
-            RCLCPP_INFO(node_->get_logger(), "Gazebo ROS Realsense plugin -> publisher created using SensorDataQoS.");
+  if (pointCloud_) {
+      if(pointCloudQos=="SensorDataQoS") {
+        pointcloud_pub_ = node_->create_publisher<sensor_msgs::msg::PointCloud2>(pointCloudTopic_,
+                                                                                   rclcpp::SensorDataQoS());
+        RCLCPP_INFO(node_->get_logger(), "Gazebo ROS Realsense plugin -> publisher created using SensorDataQoS.");
         } else if(pointCloudQos=="ParametersQoS") {
-            this->pointcloud_pub_ = this->node_->create_publisher<sensor_msgs::msg::PointCloud2>(
+            pointcloud_pub_ = node_->create_publisher<sensor_msgs::msg::PointCloud2>(
                     pointCloudTopic_, rclcpp::ParametersQoS());
             RCLCPP_INFO(node_->get_logger(), "Gazebo ROS Realsense plugin -> publisher created using ParametersQoS.");
         } else if(pointCloudQos=="ServicesQoS") {
-            this->pointcloud_pub_ = this->node_->create_publisher<sensor_msgs::msg::PointCloud2>(
+            pointcloud_pub_ = node_->create_publisher<sensor_msgs::msg::PointCloud2>(
                     pointCloudTopic_, rclcpp::ServicesQoS());
             RCLCPP_INFO(node_->get_logger(), "Gazebo ROS Realsense plugin -> publisher created using ServicesQoS.");
         } else if(pointCloudQos=="ParameterEventsQoS") {
-            this->pointcloud_pub_ = this->node_->create_publisher<sensor_msgs::msg::PointCloud2>(
+            pointcloud_pub_ = node_->create_publisher<sensor_msgs::msg::PointCloud2>(
                     pointCloudTopic_, rclcpp::ParameterEventsQoS());
             RCLCPP_INFO(node_->get_logger(), "Gazebo ROS Realsense plugin -> publisher created using ParameterEventsQoS.");
-        } else  {
-            this->pointcloud_pub_ = this->node_->create_publisher<sensor_msgs::msg::PointCloud2>(
+        } else {
+            pointcloud_pub_ = node_->create_publisher<sensor_msgs::msg::PointCloud2>(
                     pointCloudTopic_, rclcpp::SystemDefaultsQoS());
             RCLCPP_INFO(node_->get_logger(), "Gazebo ROS Realsense plugin -> publisher created using SystemDefaultsQoS.");
         }
-    }
-
+  }
   RCLCPP_INFO(node_->get_logger(), "Loaded Realsense Gazebo ROS plugin.");
 }
 
-void GazeboRosRealsense::OnNewFrame(
-  const rendering::CameraPtr cam,
+void GazeboRosRealsense::OnNewFrame(const rendering::CameraPtr cam,
   const transport::PublisherPtr pub)
 {
   rclcpp::Time current_time = this->node_->now();
