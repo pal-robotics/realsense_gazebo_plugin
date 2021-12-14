@@ -12,20 +12,27 @@
 #ifndef REALSENSE_GAZEBO_PLUGIN_ROS_QOS_SPECIFIER_HPP
 #define REALSENSE_GAZEBO_PLUGIN_ROS_QOS_SPECIFIER_HPP
 
-class ImageTransportWithSpecifiedQos: public image_transport::ImageTransport {
-public:
-    explicit ImageTransportWithSpecifiedQos(rclcpp::Node::SharedPtr node) : ImageTransport(node),
-    queue_size(2),ad_node_p(node){};
-    image_transport::CameraPublisher advertise_camera(
-            const std::string & base_topic, uint32_t queue_size, rmw_qos_profile_t qos_profile);
+namespace gazebo {
+/// \brief A Class that gives Real Sense plugin option to change Qos.
+class ImageTransportWithSpecifiedQos : public image_transport::ImageTransport {
 
-    void specify_color_qos(
-            image_transport::CameraPublisher &cam_color_pub, std::basic_string<char> topic_name, std::string colorQos);
+public:
+  explicit ImageTransportWithSpecifiedQos(rclcpp::Node::SharedPtr node) : ImageTransport(node),
+                                          ad_node_p(node), queue_size(2)  {};
+
+  image_transport::CameraPublisher advertise_camera(const std::string &base_topic,
+                                                    uint32_t queue_size,
+                                                    rmw_qos_profile_t qos_profile);
+
+  void specify_color_qos(image_transport::CameraPublisher &cam_color_pub,
+                         std::basic_string<char> topic_name,
+                         std::string colorQos);
 
 private:
-    rclcpp::Node::SharedPtr ad_node_p;
-    uint32_t queue_size;
+  rclcpp::Node::SharedPtr ad_node_p;
+  uint32_t queue_size;
 };
+}
 
 #endif //REALSENSE_GAZEBO_PLUGIN_ROS_QOS_SPECIFIER_HPP
 
