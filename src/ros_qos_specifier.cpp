@@ -2,9 +2,8 @@
 
 image_transport::CameraPublisher gazebo::ImageTransportWithSpecifiedQos::advertise_camera(
         const std::string & base_topic, uint32_t queue_size, rmw_qos_profile_t qos_profile) {
-    rmw_qos_profile_t custom_qos = qos_profile;
-    custom_qos.depth = queue_size;
-    return image_transport::CameraPublisher(ad_node_p.get(), base_topic, custom_qos);
+    qos_profile.depth = queue_size;
+    return image_transport::CameraPublisher(ad_node_p.get(), base_topic, qos_profile);
 }
 
 void gazebo::ImageTransportWithSpecifiedQos::specify_color_qos(
