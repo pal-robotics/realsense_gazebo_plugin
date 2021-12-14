@@ -82,7 +82,8 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   RCLCPP_INFO(node_->get_logger(), "Loaded Realsense Gazebo ROS plugin.");
 }
 
-void GazeboRosRealsense::OnNewFrame(const rendering::CameraPtr cam,
+void GazeboRosRealsense::OnNewFrame(
+  const rendering::CameraPtr cam,
   const transport::PublisherPtr pub)
 {
   rclcpp::Time current_time = this->node_->now();
