@@ -1,13 +1,13 @@
 #include "realsense_gazebo_plugin/ros_qos_specifier.hpp"
 
-image_transport::CameraPublisher ImageTransportWithSpecifiedQos::advertise_camera(
+image_transport::CameraPublisher gazebo::ImageTransportWithSpecifiedQos::advertise_camera(
         const std::string & base_topic, uint32_t queue_size, rmw_qos_profile_t qos_profile) {
     rmw_qos_profile_t custom_qos = qos_profile;
     custom_qos.depth = queue_size;
     return image_transport::CameraPublisher(ad_node_p.get(), base_topic, custom_qos);
 }
 
-void ImageTransportWithSpecifiedQos::specify_color_qos(
+void gazebo::ImageTransportWithSpecifiedQos::specify_color_qos(
     image_transport::CameraPublisher &cam_color_pub,
     std::basic_string<char> topic_name, std::string colorQos) {
         if(colorQos=="SensorDataQoS") {
