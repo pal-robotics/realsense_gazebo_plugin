@@ -127,7 +127,7 @@ protected:
   bool pointCloud_ = false;
   std::string pointCloudTopic_;
   std::basic_string<char> pointCloudQos;
-  std::basic_string<char>colorQos;
+  std::basic_string<char> colorQos;
   double pointCloudCutOff_, pointCloudCutOffMax_;
 
   double colorUpdateRate_;
