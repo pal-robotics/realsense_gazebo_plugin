@@ -11,24 +11,24 @@ void gazebo::ImageTransportWithSpecifiedQos::specify_color_qos(
         image_transport::CameraPublisher &cam_color_pub,
         std::basic_string<char> topic_name, std::string colorQos)
 {
+  rmw_qos_profile_t tmp_qoss = rclcpp::SensorDataQoS().get_rmw_qos_profile();
   if(colorQos=="SensorDataQoS") {
-    cam_color_pub = this->advertise_camera(topic_name, 2,rclcpp::SensorDataQoS().get_rmw_qos_profile());
+    tmp_qoss = rclcpp::SensorDataQoS().get_rmw_qos_profile();
     RCLCPP_INFO(this->ad_node_p->get_logger(), "Gazebo ROS Realsense plugin -> advertise camera using SensorDataQoS.");
   } else if(colorQos=="ParametersQoS") {
-    cam_color_pub = this->advertise_camera(
-            topic_name, 2,rclcpp::ParametersQoS().get_rmw_qos_profile());
+    tmp_qoss = rclcpp::ParametersQoS().get_rmw_qos_profile();
     RCLCPP_INFO(this->ad_node_p->get_logger(), "Gazebo ROS Realsense plugin -> advertise camera using ParametersQoS.");
   } else if(colorQos=="ServicesQoS") {
-    cam_color_pub = this->advertise_camera(
-            topic_name, 2,rclcpp::ServicesQoS().get_rmw_qos_profile());
+    tmp_qoss = rclcpp::ServicesQoS().get_rmw_qos_profile();
     RCLCPP_INFO(this->ad_node_p->get_logger(), "Gazebo ROS Realsense plugin -> advertise camera using ServicesQoS.");
   } else if(colorQos=="ParameterEventsQoS") {
-    cam_color_pub = this->advertise_camera(
-            topic_name, 2,rclcpp::ParameterEventsQoS().get_rmw_qos_profile());
+    tmp_qoss = rclcpp::ParameterEventsQoS().get_rmw_qos_profile();
     RCLCPP_INFO(this->ad_node_p->get_logger(), "Gazebo ROS Realsense plugin -> advertise camera using ParameterEventsQoS.");
   } else  {
-    cam_color_pub = this->advertise_camera(
-            topic_name, 2,rclcpp::SystemDefaultsQoS().get_rmw_qos_profile());
-    RCLCPP_INFO(this->ad_node_p->get_logger(), "Gazebo ROS Realsense plugin -> advertise camera using SystemDefaultsQoS.");
+      RCLCPP_INFO(this->ad_node_p->get_logger(), "Gazebo ROS Realsense plugin -> advertise camera using SystemDefaultsQoS.");
   }
+  cam_color_pub = this->advertise_camera(
+            topic_name, queue_size, tmp_qoss);
+
+
 }
