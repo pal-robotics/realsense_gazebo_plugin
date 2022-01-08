@@ -87,8 +87,7 @@ void GazeboRosRealsense::OnNewFrame(
   // copy data into image
   this->image_msg_.header.frame_id =
     this->cameraParamsMap_[camera_id].optical_frame;
-  this->image_msg_.header.stamp.sec = current_time.seconds();
-  this->image_msg_.header.stamp.nanosec = current_time.nanoseconds();
+  this->image_msg_.header.stamp = current_time;
 
   // set image encoding
   const std::map<std::string, std::string> supported_image_encodings = {
@@ -223,8 +222,7 @@ void GazeboRosRealsense::OnNewDepthFrame()
   // copy data into image
   this->depth_msg_.header.frame_id =
     this->cameraParamsMap_[DEPTH_CAMERA_NAME].optical_frame;
-  this->depth_msg_.header.stamp.sec = current_time.seconds();
-  this->depth_msg_.header.stamp.nanosec = current_time.nanoseconds();
+  this->depth_msg_.header.stamp = current_time;
 
   // set image encoding
   std::string pixel_format = sensor_msgs::image_encodings::TYPE_16UC1;
