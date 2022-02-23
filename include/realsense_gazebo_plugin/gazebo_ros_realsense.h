@@ -9,7 +9,7 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <camera_info_manager/camera_info_manager.hpp>
 #include <image_transport/image_transport.hpp>
-
+#include "realsense_gazebo_plugin/ros_qos_specifier.hpp"
 #include <memory>
 #include <string>
 
@@ -63,7 +63,7 @@ protected:
   rclcpp::Node::SharedPtr node_;
 
 private:
-  std::unique_ptr<image_transport::ImageTransport> itnode_;
+  std::unique_ptr<ImageTransportWithSpecifiedQos> itnode_;
 
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
 

@@ -58,6 +58,7 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   cameraParamsMap_.insert(std::make_pair(IRED1_CAMERA_NAME, CameraParams()));
   cameraParamsMap_.insert(std::make_pair(IRED2_CAMERA_NAME, CameraParams()));
 
+
   do {
     std::string name = _sdf->GetName();
     if (name == "depthUpdateRate") {
@@ -116,6 +117,10 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
       _sdf->GetValue()->Get(pointCloudCutOffMax_);
     } else if (name == "prefix") {
       this->prefix = _sdf->GetValue()->GetAsString();
+    } else if (name == "color_qos") {
+      this->colorQos = _sdf->GetValue()->GetAsString();
+    } else if (name == "pointcloud_qos") {
+      this->pointCloudQos = _sdf->GetValue()->GetAsString(); 
     } else if (name == "robotNamespace") {
       break;
     } else {
@@ -291,3 +296,4 @@ void RealSensePlugin::OnNewDepthFrame()
 
 /////////////////////////////////////////////////
 void RealSensePlugin::OnUpdate() {}
+
