@@ -1,7 +1,6 @@
 #include "realsense_gazebo_plugin/gazebo_ros_realsense.h"
 #include <sensor_msgs/fill_image.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
-#include <iostream>
 
 namespace {
 std::string extractCameraName(const std::string &name);
