@@ -64,7 +64,9 @@ protected:
   /// \brief ROS image messages
 protected:
   sensor_msgs::Image image_msg_, depth_msg_;
+  sensor_msgs::Image image_msg2_;
   sensor_msgs::PointCloud2 pointcloud_msg_;
 };
+
 }
 #endif /* _GAZEBO_ROS_REALSENSE_PLUGIN_ */
