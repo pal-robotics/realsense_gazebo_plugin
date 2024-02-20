@@ -11,7 +11,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-inconsistent-missing-override")
 endif()
 
-set(FastRTPS_INCLUDE_DIR /opt/ros/foxy/include) 
+set(FastRTPS_INCLUDE_DIR /opt/ros/foxy/include)
 set(FastRTPS_LIBRARY_RELEASE /opt/ros/foxy/lib/libfastrtps.so)
 # Load catkin and all dependencies required for this package
 find_package(ament_cmake REQUIRED)
@@ -45,12 +45,12 @@ add_library(
     ${PROJECT_NAME} SHARED
     src/RealSensePlugin.cpp
     src/gazebo_ros_realsense.cpp
-    )
+)
 
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 target_link_libraries(${PROJECT_NAME} ${GAZEBO_LIBRARIES})
 
-install(TARGETS ${PROJECT_NAME} 
+install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

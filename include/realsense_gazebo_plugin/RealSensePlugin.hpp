@@ -1,21 +1,23 @@
-/*
-// Copyright (c) 2016 Intel Corporation
+// Copyright (c) 2024 Pal Robotics S.L. All rights reserved
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-*/
 
-#ifndef _GZRS_PLUGIN_HH_
-#define _GZRS_PLUGIN_HH_
+#pragma once
+
+#include <memory>
+#include <string>
+#include <vector>
+#include <map>
 
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/common/common.hh>
@@ -25,17 +27,18 @@
 #include <gazebo/sensors/sensors.hh>
 #include <sdf/sdf.hh>
 
-#include <memory>
-#include <string>
-
-namespace gazebo {
+namespace gazebo
+{
 #define DEPTH_CAMERA_NAME "depth"
 #define COLOR_CAMERA_NAME "color"
 #define IRED1_CAMERA_NAME "ired1"
 #define IRED2_CAMERA_NAME "ired2"
 
-struct CameraParams {
-  CameraParams() {}
+struct CameraParams
+{
+  CameraParams()
+  {
+  }
 
   std::string topic_name;
   std::string camera_info_topic_name;
@@ -43,8 +46,10 @@ struct CameraParams {
 };
 
 /// \brief A plugin that simulates Real Sense camera streams.
-class RealSensePlugin : public ModelPlugin {
+class RealSensePlugin : public ModelPlugin
+{
   /// \brief Constructor.
+
 public:
   RealSensePlugin();
 
@@ -64,8 +69,9 @@ public:
 
   /// \brief Callback that publishes a received Camera Frame as an
   /// ImageStamped message.
-  virtual void OnNewFrame(const rendering::CameraPtr cam,
-                          const transport::PublisherPtr pub);
+  virtual void OnNewFrame(
+    const rendering::CameraPtr cam,
+    const transport::PublisherPtr pub);
 
 protected:
   /// \brief Pointer to the model containing the plugin.
@@ -135,5 +141,4 @@ protected:
   float rangeMinDepth_;
   float rangeMaxDepth_;
 };
-}
-#endif
+}  // namespace gazebo

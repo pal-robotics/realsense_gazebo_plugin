@@ -1,4 +1,18 @@
-#include "realsense_gazebo_plugin/gazebo_ros_realsense.h"
+// Copyright (c) 2024 Pal Robotics S.L. All rights reserved
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "realsense_gazebo_plugin/gazebo_ros_realsense.hpp"
 #include <sensor_msgs/fill_image.hpp>
 #include <sensor_msgs/image_encodings.hpp>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
@@ -9,16 +23,14 @@ std::string extractCameraName(const std::string & name);
 sensor_msgs::msg::CameraInfo cameraInfo(
   const sensor_msgs::msg::Image & image,
   float horizontal_fov);
-}
+}  // namespace
 
 namespace gazebo
 {
 // Register the plugin
 GZ_REGISTER_MODEL_PLUGIN(GazeboRosRealsense)
 
-GazeboRosRealsense::GazeboRosRealsense()
-{
-}
+GazeboRosRealsense::GazeboRosRealsense() {}
 
 GazeboRosRealsense::~GazeboRosRealsense()
 {
@@ -27,7 +39,6 @@ GazeboRosRealsense::~GazeboRosRealsense()
 
 void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
-
   this->node_ = rclcpp::Node::make_shared("GazeboRealsenseNode");
 
   // Make sure the ROS node for Gazebo has already been initialized
@@ -47,7 +58,8 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
   // initialize camera_info_manager
   this->camera_info_manager_.reset(
-    new camera_info_manager::CameraInfoManager(this->node_.get(), this->GetHandle()));
+    new camera_info_manager::CameraInfoManager(
+      this->node_.get(), this->GetHandle()));
 
   this->itnode_.reset(new image_transport::ImageTransport(this->node_));
 
@@ -61,7 +73,8 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name, 2);
 
   if (pointCloud_) {
-    this->pointcloud_pub_ = this->node_->create_publisher<sensor_msgs::msg::PointCloud2>(
+    this->pointcloud_pub_ =
+      this->node_->create_publisher<sensor_msgs::msg::PointCloud2>(
       pointCloudTopic_, rclcpp::SystemDefaultsQoS());
   }
 
@@ -99,7 +112,8 @@ void GazeboRosRealsense::OnNewFrame(
   // copy from simulation image to ROS msg
   sensor_msgs::fillImage(
     this->image_msg_, pixel_format, cam->ImageHeight(),
-    cam->ImageWidth(), cam->ImageDepth() * cam->ImageWidth(),
+    cam->ImageWidth(),
+    cam->ImageDepth() * cam->ImageWidth(),
     reinterpret_cast<const void *>(cam->ImageData()));
 
   // identify camera rendering
@@ -119,9 +133,8 @@ void GazeboRosRealsense::OnNewFrame(
 // https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_plugins/src/gazebo_ros_openni_kinect.cpp#L302
 // Fill depth information
 bool GazeboRosRealsense::FillPointCloudHelper(
-  sensor_msgs::msg::PointCloud2 & point_cloud_msg,
-  uint32_t rows_arg, uint32_t cols_arg,
-  uint32_t step_arg, void * data_arg)
+  sensor_msgs::msg::PointCloud2 & point_cloud_msg, uint32_t rows_arg,
+  uint32_t cols_arg, uint32_t step_arg, void * data_arg)
 {
   sensor_msgs::PointCloud2Modifier pcd_modifier(point_cloud_msg);
   pcd_modifier.setPointCloud2FieldsByString(2, "xyz", "rgb");
@@ -134,30 +147,33 @@ bool GazeboRosRealsense::FillPointCloudHelper(
   sensor_msgs::PointCloud2Iterator<float> iter_z(pointcloud_msg_, "z");
   sensor_msgs::PointCloud2Iterator<uint8_t> iter_rgb(pointcloud_msg_, "rgb");
 
-  float * toCopyFrom = (float *)data_arg;
+  float * toCopyFrom = reinterpret_cast<float *> data_arg;
   int index = 0;
 
   double hfov = this->depthCam->HFOV().Radian();
-  double fl = ((double)this->depthCam->ImageWidth()) / (2.0 * tan(hfov / 2.0));
+  double fl = (static_cast<double>(this->depthCam->ImageWidth()) / (2.0 * tan(hfov / 2.0)));
 
   // convert depth to point cloud
   for (uint32_t j = 0; j < rows_arg; j++) {
     double pAngle;
     if (rows_arg > 1) {
-      pAngle = atan2((double)j - 0.5 * (double)(rows_arg - 1), fl);
+      pAngle = atan2(static_cast<double>(j) - 0.5 * static_cast<double>(rows_arg - 1), fl);
     } else {
       pAngle = 0.0;
     }
 
-    for (uint32_t i = 0; i < cols_arg; i++, ++iter_x, ++iter_y, ++iter_z, ++iter_rgb) {
+    for (uint32_t i = 0; i < cols_arg;
+      i++, ++iter_x, ++iter_y, ++iter_z, ++iter_rgb)
+    {
       double yAngle;
       if (cols_arg > 1) {
-        yAngle = atan2((double)i - 0.5 * (double)(cols_arg - 1), fl);
+        yAngle = atan2(static_cast<double>(i) - 0.5 * static_cast<double>(cols_arg - 1), fl);
       } else {
         yAngle = 0.0;
       }
 
-      double depth = toCopyFrom[index++];  // + 0.0*this->myParent->GetNearClip();
+      double depth =
+        toCopyFrom[index++];   // + 0.0*this->myParent->GetNearClip();
 
       if (depth > pointCloudCutOff_ && depth < pointCloudCutOffMax_) {
         // in optical frame
@@ -167,31 +183,29 @@ bool GazeboRosRealsense::FillPointCloudHelper(
         *iter_x = depth * tan(yAngle);
         *iter_y = depth * tan(pAngle);
         *iter_z = depth;
-      } else { // point in the unseeable range
+      } else {  // point in the unseeable range
         *iter_x = *iter_y = *iter_z = std::numeric_limits<float>::quiet_NaN();
         point_cloud_msg.is_dense = false;
       }
 
       // put image color data for each point
-      uint8_t * image_src = (uint8_t *)(&(this->image_msg_.data[0]));
+      uint8_t * image_src = reinterpret_cast<uint8_t *>(&(this->image_msg_.data[0]));
       if (this->image_msg_.data.size() == rows_arg * cols_arg * 3) {
         // color
         if (this->image_msg_.encoding == sensor_msgs::image_encodings::RGB8) {
           iter_rgb[2] = image_src[i * 3 + j * cols_arg * 3 + 0];
           iter_rgb[1] = image_src[i * 3 + j * cols_arg * 3 + 1];
           iter_rgb[0] = image_src[i * 3 + j * cols_arg * 3 + 2];
-        }
-        else if (this->image_msg_.encoding == sensor_msgs::image_encodings::BGR8) {
+        } else if (this->image_msg_.encoding == sensor_msgs::image_encodings::BGR8) {
           iter_rgb[0] = image_src[i * 3 + j * cols_arg * 3 + 0];
           iter_rgb[1] = image_src[i * 3 + j * cols_arg * 3 + 1];
           iter_rgb[2] = image_src[i * 3 + j * cols_arg * 3 + 2];
+        } else {
+          throw std::runtime_error(
+                  "unsupported colour encoding: " +
+                  this->image_msg_.encoding);
         }
-        else {
-          throw std::runtime_error("unsupported colour encoding: " + this->image_msg_.encoding);
-        }
-      }
-      else if (this->image_msg_.data.size() == rows_arg * cols_arg)
-      {
+      } else if (this->image_msg_.data.size() == rows_arg * cols_arg) {
         // mono (or bayer?  @todo; fix for bayer)
         iter_rgb[0] = image_src[i + j * cols_arg];
         iter_rgb[1] = image_src[i + j * cols_arg];
@@ -248,12 +262,13 @@ void GazeboRosRealsense::OnNewDepthFrame()
       this->pointcloud_msg_.point_step * this->depthCam->ImageWidth();
     FillPointCloudHelper(
       this->pointcloud_msg_, this->depthCam->ImageHeight(),
-      this->depthCam->ImageWidth(), 2 * this->depthCam->ImageWidth(),
-      (void *)this->depthCam->DepthData());
+      this->depthCam->ImageWidth(),
+      2 * this->depthCam->ImageWidth(),
+      reinterpret_cast<void *>(this->depthCam->DepthData()));
     this->pointcloud_pub_->publish(this->pointcloud_msg_);
   }
 }
-}
+}  // namespace gazebo
 
 namespace
 {
@@ -303,4 +318,4 @@ sensor_msgs::msg::CameraInfo cameraInfo(
 
   return info_msg;
 }
-}
+}  // namespace
