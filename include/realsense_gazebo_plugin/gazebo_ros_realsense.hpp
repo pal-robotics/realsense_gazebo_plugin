@@ -56,7 +56,7 @@ public:
   bool FillPointCloudHelper(
     sensor_msgs::msg::PointCloud2 & point_cloud_msg,
     uint32_t rows_arg, uint32_t cols_arg,
-    uint32_t step_arg, void * data_arg);
+    uint32_t step_arg, const void * data_arg);
 
   /// \brief Callback that publishes a received Camera Frame as an
   /// ImageStamped message.
@@ -87,7 +87,7 @@ protected:
   /// \brief ROS image messages
 
 protected:
-  sensor_msgs::msg::Image aimage_msg_, depth_msg_;
+  sensor_msgs::msg::Image image_msg_, depth_msg_;
   sensor_msgs::msg::PointCloud2 pointcloud_msg_;
 };
 }  // namespace gazebo

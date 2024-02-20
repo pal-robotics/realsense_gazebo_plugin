@@ -134,7 +134,7 @@ void GazeboRosRealsense::OnNewFrame(
 // Fill depth information
 bool GazeboRosRealsense::FillPointCloudHelper(
   sensor_msgs::msg::PointCloud2 & point_cloud_msg, uint32_t rows_arg,
-  uint32_t cols_arg, uint32_t step_arg, void * data_arg)
+  uint32_t cols_arg, uint32_t step_arg, const void * data_arg)
 {
   sensor_msgs::PointCloud2Modifier pcd_modifier(point_cloud_msg);
   pcd_modifier.setPointCloud2FieldsByString(2, "xyz", "rgb");
@@ -147,7 +147,7 @@ bool GazeboRosRealsense::FillPointCloudHelper(
   sensor_msgs::PointCloud2Iterator<float> iter_z(pointcloud_msg_, "z");
   sensor_msgs::PointCloud2Iterator<uint8_t> iter_rgb(pointcloud_msg_, "rgb");
 
-  float * toCopyFrom = reinterpret_cast<float *> data_arg;
+  const float * toCopyFrom = reinterpret_cast<const float *>(data_arg);
   int index = 0;
 
   double hfov = this->depthCam->HFOV().Radian();
@@ -264,7 +264,7 @@ void GazeboRosRealsense::OnNewDepthFrame()
       this->pointcloud_msg_, this->depthCam->ImageHeight(),
       this->depthCam->ImageWidth(),
       2 * this->depthCam->ImageWidth(),
-      reinterpret_cast<void *>(this->depthCam->DepthData()));
+      reinterpret_cast<const void *>(this->depthCam->DepthData()));
     this->pointcloud_pub_->publish(this->pointcloud_msg_);
   }
 }
