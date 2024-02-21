@@ -8,7 +8,8 @@
   <maintainer email="doron.hirshberg@intel.com">Doron Hirshberg</maintainer>
   <maintainer email="missrisalaheddine@gmail.com">Salah-Eddine Missri</maintainer>
   <maintainer email="adria.roig@pal-robotics.com">Adria Roig</maintainer>
-
+  <maintainer email="sergio.moyano@pal-robotics.com">Sergio Moyano</maintainer>
+  
   <author email="sergey.dorodnicov@intel.com">Sergey Dorodnicov</author>
   <author email="doron.hirshberg@intel.com">Doron Hirshberg</author>
   <author email="fetulahatas1@gmail.com">Fetullah Atas</author>
@@ -26,7 +27,11 @@
   <depend>image_transport</depend>
   <depend>camera_info_manager</depend>
 
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  
   <export>
     <gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" gazebo_model_path="${prefix}/models" />
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

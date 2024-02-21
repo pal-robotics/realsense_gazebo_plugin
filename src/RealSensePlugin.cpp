@@ -1,20 +1,18 @@
-/*
-// Copyright (c) 2016 Intel Corporation
+// Copyright (c) 2024 Pal Robotics S.L. All rights reserved
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-*/
 
-#include "realsense_gazebo_plugin/RealSensePlugin.h"
+#include "realsense_gazebo_plugin/RealSensePlugin.hpp"
 #include <gazebo/physics/physics.hh>
 #include <gazebo/rendering/DepthCamera.hh>
 #include <gazebo/sensors/sensors.hh>
@@ -26,7 +24,8 @@
 #define IRED1_CAMERA_TOPIC "infrared"
 #define IRED2_CAMERA_TOPIC "infrared2"
 
-using namespace gazebo;
+namespace gazebo
+{
 
 /////////////////////////////////////////////////
 RealSensePlugin::RealSensePlugin()
@@ -46,10 +45,10 @@ RealSensePlugin::~RealSensePlugin() {}
 void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
   // Output the name of the model
-  std::cout <<
-    std::endl <<
-    "RealSensePlugin: The realsense_camera plugin is attach to model " <<
-    _model->GetName() << std::endl;
+  std::cout
+    << std::endl
+    << "RealSensePlugin: The realsense_camera plugin is attach to model "
+    << _model->GetName() << std::endl;
 
   _sdf = _sdf->GetFirstElement();
 
@@ -151,23 +150,23 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
   // Check if camera renderers have been found successfuly
   if (!this->depthCam) {
-    std::cerr << "RealSensePlugin: Depth Camera has not been found" <<
-      std::endl;
+    std::cerr << "RealSensePlugin: Depth Camera has not been found"
+              << std::endl;
     return;
   }
   if (!this->ired1Cam) {
-    std::cerr << "RealSensePlugin: InfraRed Camera 1 has not been found" <<
-      std::endl;
+    std::cerr << "RealSensePlugin: InfraRed Camera 1 has not been found"
+              << std::endl;
     return;
   }
   if (!this->ired2Cam) {
-    std::cerr << "RealSensePlugin: InfraRed Camera 2 has not been found" <<
-      std::endl;
+    std::cerr << "RealSensePlugin: InfraRed Camera 2 has not been found"
+              << std::endl;
     return;
   }
   if (!this->colorCam) {
-    std::cerr << "RealSensePlugin: Color Camera has not been found" <<
-      std::endl;
+    std::cerr << "RealSensePlugin: Color Camera has not been found"
+              << std::endl;
     return;
   }
 
@@ -177,8 +176,8 @@ void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
       this->depthCam->ImageWidth() *
       this->depthCam->ImageHeight());
   } catch (std::bad_alloc & e) {
-    std::cerr << "RealSensePlugin: depthMap allocation failed: " << e.what() <<
-      std::endl;
+    std::cerr << "RealSensePlugin: depthMap allocation failed: " << e.what()
+              << std::endl;
     return;
   }
 
@@ -240,8 +239,8 @@ void RealSensePlugin::OnNewFrame(
   // Set Image Data
   msg.mutable_image()->set_step(cam->ImageWidth() * cam->ImageDepth());
   msg.mutable_image()->set_data(
-    cam->ImageData(),
-    cam->ImageDepth() * cam->ImageWidth() *
+    cam->ImageData(), cam->ImageDepth() *
+    cam->ImageWidth() *
     cam->ImageHeight());
 
   // Publish realsense infrared stream
@@ -291,3 +290,5 @@ void RealSensePlugin::OnNewDepthFrame()
 
 /////////////////////////////////////////////////
 void RealSensePlugin::OnUpdate() {}
+
+}  // namespace gazebo
