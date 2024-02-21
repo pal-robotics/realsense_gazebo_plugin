@@ -2,8 +2,8 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.0.0 (2024-02-21)
+------------------
 * Merge branch 'new_maintainer' into 'alum-devel'
   Added new maintainer sergio
   See merge request device/realsense_gazebo_plugin!16
