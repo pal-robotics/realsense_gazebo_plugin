@@ -2,6 +2,48 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'new_maintainer' into 'alum-devel'
+  Added new maintainer sergio
+  See merge request device/realsense_gazebo_plugin!16
+* Added build type ament_cmake
+* Setting the types right for data_arg in FillPointCloudHelper
+* Fix ament linters errors
+* Added test depend ament_lint
+* Added new maintainer sergio
+* Merge pull request #41 from Maidbot/foxy-devel
+  [Bug-fix] Old lines preventing build
+* Merge pull request #4 from Maidbot/bug-fix/memory-leak-image-transport
+  [Bug-fix] Image transport memory leak
+* Make image transport a smart pointer so it gets freed when gazebo_ros_realsense plugin is deleted
+* Merge pull request #3 from Maidbot/bug-fix/rosnode-stdcout
+  [Bug-fix] Remove rosnode and stdcout.
+* Remove rosnode preventing build. Remove std::cout in favor of rclcpp logging
+* Merge pull request #39 from jediofgever/ros2
+  Add ros2 support
+* Merge branch 'foxy-devel' into ros2
+* added more comments on the png compression format for depth images
+* Merge pull request #28 from christian-rauch/depth_compressed_png
+  set 'png' compression format for depth images
+* set 'png' compression format for depth images
+  By default the compressed_image_transport is using the jpeg format. This is
+  a lossy compression format which introduces compression artefacts which are
+  not visible in colour images, but corrupt the 16bit depth images.
+  Change the depth compression to the lossless png format to keep the original
+  data when decompressing depth images.
+* Merge pull request #30 from christian-rauch/colour_channel_fix
+  fix colour channel order for point cloud
+* fix colour channel order for point cloud
+* update readme
+* add how to use to readme
+* update readme
+* add ros2 support
+* Merge pull request #16 from dvigne/melodic-devel
+  Changed Distortion Model in Camera Info Messages
+* Changed Distortion Model in Camera Info Messages
+* Contributors: Christian Rauch, Derick Vigne, Fetullah Atas, Sai Kishor Kothakota, Victor Lopez, jediofgever, john-maidbot, sergiomoyano
+
 1.1.0 (2020-01-30)
 ------------------
 * Merge branch 'pointcloud_ferrum' into 'ferrum-devel'
