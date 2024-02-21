@@ -32,5 +32,6 @@
   
   <export>
     <gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" gazebo_model_path="${prefix}/models" />
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
