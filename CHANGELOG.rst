@@ -2,6 +2,14 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'smd/feat/topic_prefix' into 'alum-devel'
+  Added prefix to all the topics published by the plugin
+  See merge request device/realsense_gazebo_plugin!17
+* Added prefix to all the topics published by the plugin
+* Contributors: sergiomoyano
+
 3.0.0 (2024-02-21)
 ------------------
 * Merge branch 'new_maintainer' into 'alum-devel'
