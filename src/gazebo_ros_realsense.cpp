@@ -39,7 +39,10 @@ GazeboRosRealsense::~GazeboRosRealsense()
 
 void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
-  this->node_ = rclcpp::Node::make_shared("GazeboRealsenseNode");
+  RealSensePlugin::Load(_model, _sdf);
+  std::string node_name = "gazebo_realsense";
+  node_name += this->prefix.empty() ? "" : "_" + this->prefix;
+  this->node_ = rclcpp::Node::make_shared(node_name);
 
   // Make sure the ROS node for Gazebo has already been initialized
   if (!rclcpp::ok()) {
@@ -53,8 +56,6 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     return;
   }
   RCLCPP_INFO(node_->get_logger(), "Realsense Gazebo ROS plugin loading.");
-
-  RealSensePlugin::Load(_model, _sdf);
 
   // initialize camera_info_manager
   this->camera_info_manager_.reset(
@@ -74,9 +75,10 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     prefix + std::string("/") + cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name, 2);
 
   if (pointCloud_) {
-    this->pointcloud_pub_ =
-      this->node_->create_publisher<sensor_msgs::msg::PointCloud2>(
-      prefix + std::string("/") + pointCloudTopic_, rclcpp::SensorDataQoS());
+    this->pctnode_ = std::make_unique<point_cloud_transport::PointCloudTransport>(this->node_);
+    this->pointcloud_pub_ = this->pctnode_->advertise(
+      prefix + std::string(
+        "/") + pointCloudTopic_, rmw_qos_profile_sensor_data);
   }
 
   RCLCPP_INFO(node_->get_logger(), "Loaded Realsense Gazebo ROS plugin.");
@@ -255,7 +257,7 @@ void GazeboRosRealsense::OnNewDepthFrame()
     cameraInfo(this->depth_msg_, this->depthCam->HFOV().Radian());
   this->depth_pub_.publish(this->depth_msg_, depth_info_msg);
 
-  if (pointCloud_ && this->pointcloud_pub_->get_subscription_count() > 0) {
+  if (pointCloud_ && this->pointcloud_pub_.getNumSubscribers() > 0) {
     this->pointcloud_msg_.header = this->depth_msg_.header;
     this->pointcloud_msg_.width = this->depthCam->ImageWidth();
     this->pointcloud_msg_.height = this->depthCam->ImageHeight();
@@ -266,7 +268,7 @@ void GazeboRosRealsense::OnNewDepthFrame()
       this->depthCam->ImageWidth(),
       2 * this->depthCam->ImageWidth(),
       reinterpret_cast<const void *>(this->depthCam->DepthData()));
-    this->pointcloud_pub_->publish(this->pointcloud_msg_);
+    this->pointcloud_pub_.publish(this->pointcloud_msg_);
   }
 }
 }  // namespace gazebo

@@ -18,6 +18,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(gazebo_ros REQUIRED)
 find_package(image_transport REQUIRED)
+find_package(point_cloud_transport REQUIRED)
 find_package(camera_info_manager REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
@@ -29,6 +30,7 @@ set( dependencies
     rclcpp
     gazebo_ros
     image_transport
+    point_cloud_transport
     camera_info_manager
     sensor_msgs
 )
