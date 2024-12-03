@@ -19,6 +19,7 @@
 
 #include <camera_info_manager/camera_info_manager.hpp>
 #include <image_transport/image_transport.hpp>
+#include <point_cloud_transport/point_cloud_transport.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
@@ -78,11 +79,11 @@ protected:
 
 private:
   std::unique_ptr<image_transport::ImageTransport> itnode_;
-
-  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
+  std::unique_ptr<point_cloud_transport::PointCloudTransport> pctnode_;
 
 protected:
   image_transport::CameraPublisher color_pub_, ir1_pub_, ir2_pub_, depth_pub_;
+  point_cloud_transport::Publisher pointcloud_pub_;
 
   /// \brief ROS image messages
 
