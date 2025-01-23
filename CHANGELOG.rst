@@ -2,6 +2,14 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'abr/feat/pc-transport' into 'alum-devel'
+  use point_cloud_transport
+  See merge request device/realsense_gazebo_plugin!20
+* use point_cloud_transport
+* Contributors: antoniobrandi, sergiomoyano
+
 3.0.2 (2024-07-02)
 ------------------
 * Merge branch 'man/feat/image-qos-best-effort' into 'alum-devel'
