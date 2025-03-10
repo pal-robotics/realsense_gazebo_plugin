@@ -1,0 +1,46 @@
+{
+  "name": "Realsense Gazebo (Noetic)",
+  "dockerFile": "Dockerfile",
+  "runArgs": [
+    "--privileged"
+  ],
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/ubuntu/ros_ws/src/${localWorkspaceFolderBasename},type=bind",
+  "workspaceFolder": "/home/ubuntu/ros_ws/src",
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.bash_history,target=/home/vscode/.bash_history,type=bind"
+  ],
+  "postCreateCommand": "bash /home/ubuntu/ros_ws/src/${localWorkspaceFolderBasename}/.devcontainer/post_create.sh",
+  "postStartCommand": "catkin build",
+  "features": {
+    // see https://www.youtube.com/watch?v=dihfA7Ol6Mw&t=613s for more info
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
+  },
+  "forwardPorts": [
+    6080,
+    5901
+  ],
+  "portsAttributes": {
+    "6080": {
+      "label": "Desktop (Web)"
+    },
+    "5901": {
+      "label": "Desktop (VNC)"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // Workbench
+        "workbench.iconTheme": "vscode-icons",
+        // Files
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "files.exclude": {
+          "**/*.pyc": true,
+          "**/.git": false
+        }
+      }
+    }
+  },
+}
