@@ -278,6 +278,12 @@ sensor_msgs::CameraInfo cameraInfo(const sensor_msgs::Image &image,
   info_msg.K[5] = info_msg.height * 0.5;
   info_msg.K[8] = 1.;
 
+  info_msg.D.push_back(0);
+  info_msg.D.push_back(0);
+  info_msg.D.push_back(0);
+  info_msg.D.push_back(0);
+  info_msg.D.push_back(0);
+
   info_msg.P[0] = info_msg.K[0];
   info_msg.P[5] = info_msg.K[4];
   info_msg.P[2] = info_msg.K[2];

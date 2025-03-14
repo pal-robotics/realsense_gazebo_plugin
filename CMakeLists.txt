@@ -40,9 +40,18 @@ add_library(
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 
+add_library(realsense_gazebo_accel_sensor src/gazebo_ros_accel_sensor.cpp)
+target_link_libraries(realsense_gazebo_accel_sensor ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_library(realsense_gazebo_gyro_sensor src/gazebo_ros_gyro_sensor.cpp)
+target_link_libraries(realsense_gazebo_gyro_sensor ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+#add_dependencies(realsense_gazebo_gyro_sensor ${catkin_EXPORTED_TARGETS})
+
 install(
     TARGETS
         ${PROJECT_NAME}
+        realsense_gazebo_accel_sensor
+        realsense_gazebo_gyro_sensor
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
