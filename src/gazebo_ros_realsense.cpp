@@ -67,12 +67,15 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   this->color_pub_ = image_transport::create_camera_publisher(
     this->node_.get(), prefix + std::string("/") +
     cameraParamsMap_[COLOR_CAMERA_NAME].topic_name, rmw_qos_profile_sensor_data);
-  this->ir1_pub_ = this->itnode_->advertiseCamera(
-    prefix + std::string("/") + cameraParamsMap_[IRED1_CAMERA_NAME].topic_name, 2);
-  this->ir2_pub_ = this->itnode_->advertiseCamera(
-    prefix + std::string("/") + cameraParamsMap_[IRED2_CAMERA_NAME].topic_name, 2);
-  this->depth_pub_ = this->itnode_->advertiseCamera(
-    prefix + std::string("/") + cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name, 2);
+  this->ir1_pub_ = image_transport::create_camera_publisher(
+    this->node_.get(), prefix + std::string("/") +
+    cameraParamsMap_[IRED1_CAMERA_NAME].topic_name, rmw_qos_profile_sensor_data);
+  this->ir2_pub_ = image_transport::create_camera_publisher(
+    this->node_.get(), prefix + std::string("/") +
+    cameraParamsMap_[IRED2_CAMERA_NAME].topic_name, rmw_qos_profile_sensor_data);
+  this->depth_pub_ = image_transport::create_camera_publisher(
+    this->node_.get(), prefix + std::string("/") +
+    cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name, rmw_qos_profile_sensor_data);
 
   if (pointCloud_) {
     this->pctnode_ = std::make_unique<point_cloud_transport::PointCloudTransport>(this->node_);
