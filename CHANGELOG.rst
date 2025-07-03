@@ -2,8 +2,8 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.2.0 (2025-07-03)
+------------------
 * typo and removed useless pub
 * using sensor_data QoS for all publishers
 * Contributors: andreacapodacqua
