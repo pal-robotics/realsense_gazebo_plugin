@@ -78,7 +78,6 @@ protected:
   rclcpp::Node::SharedPtr node_;
 
 private:
-  std::unique_ptr<image_transport::ImageTransport> itnode_;
   std::unique_ptr<point_cloud_transport::PointCloudTransport> pctnode_;
 
 protected:
