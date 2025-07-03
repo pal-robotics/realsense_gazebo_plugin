@@ -2,6 +2,12 @@
 Changelog for package realsense_gazebo_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* typo and removed useless pub
+* using sensor_data QoS for all publishers
+* Contributors: andreacapodacqua
+
 3.1.0 (2025-01-23)
 ------------------
 * Merge branch 'abr/feat/pc-transport' into 'alum-devel'
