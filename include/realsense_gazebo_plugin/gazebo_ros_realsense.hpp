@@ -16,6 +16,7 @@
 
 #include <memory>
 #include <string>
+#include <mutex>
 
 #include <camera_info_manager/camera_info_manager.hpp>
 #include <image_transport/image_transport.hpp>
@@ -48,7 +49,8 @@ public:
 
   bool FillPointCloudHelper(
     sensor_msgs::msg::PointCloud2 & point_cloud_msg, uint32_t rows_arg,
-    uint32_t cols_arg, uint32_t step_arg, const void * data_arg);
+    uint32_t cols_arg, uint32_t step_arg, const void * data_arg,
+    const sensor_msgs::msg::Image & color_msg);
 
 protected:
   std::shared_ptr<camera_info_manager::CameraInfoManager> camera_info_manager_;
@@ -58,7 +60,10 @@ protected:
   image_transport::CameraPublisher color_pub_, ir1_pub_, ir2_pub_, depth_pub_;
   point_cloud_transport::Publisher pointcloud_pub_;
 
-  sensor_msgs::msg::Image image_msg_, depth_msg_;
+  sensor_msgs::msg::Image depth_msg_;
   sensor_msgs::msg::PointCloud2 pointcloud_msg_;
+
+  std::mutex color_mutex_;
+  sensor_msgs::msg::Image latest_color_msg_;
 };
 }  // namespace realsense_gazebo_plugin
