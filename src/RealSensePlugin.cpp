@@ -13,282 +13,92 @@
 // limitations under the License.
 
 #include "realsense_gazebo_plugin/RealSensePlugin.hpp"
-#include <gazebo/physics/physics.hh>
-#include <gazebo/rendering/DepthCamera.hh>
-#include <gazebo/sensors/sensors.hh>
+#include <iostream>
+#include <limits>
 
 #define DEPTH_SCALE_M 0.001
 
-#define DEPTH_CAMERA_TOPIC "depth"
-#define COLOR_CAMERA_TOPIC "color"
-#define IRED1_CAMERA_TOPIC "infrared"
-#define IRED2_CAMERA_TOPIC "infrared2"
-
-namespace gazebo
+namespace realsense_gazebo_plugin
 {
 
-/////////////////////////////////////////////////
 RealSensePlugin::RealSensePlugin()
-{
-  this->depthCam = nullptr;
-  this->ired1Cam = nullptr;
-  this->ired2Cam = nullptr;
-  this->colorCam = nullptr;
-  this->prefix = "";
-  this->pointCloudCutOffMax_ = 5.0;
-}
+: pointCloudCutOff_(0.0),
+  pointCloudCutOffMax_(5.0),
+  colorUpdateRate_(0.0),
+  infraredUpdateRate_(0.0),
+  depthUpdateRate_(0.0),
+  rangeMinDepth_(0.0f),
+  rangeMaxDepth_(std::numeric_limits<float>::max())
+{}
 
-/////////////////////////////////////////////////
 RealSensePlugin::~RealSensePlugin() {}
 
-/////////////////////////////////////////////////
-void RealSensePlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
+void RealSensePlugin::Configure(const gz::sim::Entity & /*_entity*/,
+                                const std::shared_ptr<const sdf::Element> &_sdf,
+                                gz::sim::EntityComponentManager & /*_ecm*/,
+                                gz::sim::EventManager & /*_eventMgr*/)
 {
-  // Output the name of the model
-  std::cout
-    << std::endl
-    << "RealSensePlugin: The realsense_camera plugin is attach to model "
-    << _model->GetName() << std::endl;
-
-  _sdf = _sdf->GetFirstElement();
-
   cameraParamsMap_.insert(std::make_pair(COLOR_CAMERA_NAME, CameraParams()));
   cameraParamsMap_.insert(std::make_pair(DEPTH_CAMERA_NAME, CameraParams()));
   cameraParamsMap_.insert(std::make_pair(IRED1_CAMERA_NAME, CameraParams()));
   cameraParamsMap_.insert(std::make_pair(IRED2_CAMERA_NAME, CameraParams()));
 
-  do {
-    std::string name = _sdf->GetName();
-    if (name == "depthUpdateRate") {
-      _sdf->GetValue()->Get(depthUpdateRate_);
-    } else if (name == "colorUpdateRate") {
-      _sdf->GetValue()->Get(colorUpdateRate_);
-    } else if (name == "infraredUpdateRate") {
-      _sdf->GetValue()->Get(infraredUpdateRate_);
-    } else if (name == "depthTopicName") {
-      cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "depthCameraInfoTopicName") {
-      cameraParamsMap_[DEPTH_CAMERA_NAME].camera_info_topic_name =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "colorTopicName") {
-      cameraParamsMap_[COLOR_CAMERA_NAME].topic_name =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "colorCameraInfoTopicName") {
-      cameraParamsMap_[COLOR_CAMERA_NAME].camera_info_topic_name =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "infrared1TopicName") {
-      cameraParamsMap_[IRED1_CAMERA_NAME].topic_name =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "infrared1CameraInfoTopicName") {
-      cameraParamsMap_[IRED1_CAMERA_NAME].camera_info_topic_name =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "infrared2TopicName") {
-      cameraParamsMap_[IRED2_CAMERA_NAME].topic_name =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "infrared2CameraInfoTopicName") {
-      cameraParamsMap_[IRED2_CAMERA_NAME].camera_info_topic_name =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "colorOpticalframeName") {
-      cameraParamsMap_[COLOR_CAMERA_NAME].optical_frame =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "depthOpticalframeName") {
-      cameraParamsMap_[DEPTH_CAMERA_NAME].optical_frame =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "infrared1OpticalframeName") {
-      cameraParamsMap_[IRED1_CAMERA_NAME].optical_frame =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "infrared2OpticalframeName") {
-      cameraParamsMap_[IRED2_CAMERA_NAME].optical_frame =
-        _sdf->GetValue()->GetAsString();
-    } else if (name == "rangeMinDepth") {
-      _sdf->GetValue()->Get(rangeMinDepth_);
-    } else if (name == "rangeMaxDepth") {
-      _sdf->GetValue()->Get(rangeMaxDepth_);
-    } else if (name == "pointCloud") {
-      _sdf->GetValue()->Get(pointCloud_);
-    } else if (name == "pointCloudTopicName") {
-      pointCloudTopic_ = _sdf->GetValue()->GetAsString();
-    } else if (name == "pointCloudCutoff") {
-      _sdf->GetValue()->Get(pointCloudCutOff_);
-    } else if (name == "pointCloudCutoffMax") {
-      _sdf->GetValue()->Get(pointCloudCutOffMax_);
-    } else if (name == "prefix") {
-      this->prefix = _sdf->GetValue()->GetAsString();
-    } else if (name == "robotNamespace") {
-      break;
-    } else {
-      throw std::runtime_error("Ivalid parameter for RealSensePlugin");
-    }
+  if (_sdf->HasElement("depthUpdateRate")) depthUpdateRate_ = _sdf->Get<double>("depthUpdateRate");
+  if (_sdf->HasElement("colorUpdateRate")) colorUpdateRate_ = _sdf->Get<double>("colorUpdateRate");
+  if (_sdf->HasElement("infraredUpdateRate")) infraredUpdateRate_ = _sdf->Get<double>("infraredUpdateRate");
 
-    _sdf = _sdf->GetNextElement();
-  } while (_sdf);
+  if (_sdf->HasElement("depthTopicName")) cameraParamsMap_[DEPTH_CAMERA_NAME].topic_name = _sdf->Get<std::string>("depthTopicName");
+  if (_sdf->HasElement("depthCameraInfoTopicName")) cameraParamsMap_[DEPTH_CAMERA_NAME].camera_info_topic_name = _sdf->Get<std::string>("depthCameraInfoTopicName");
+  if (_sdf->HasElement("colorTopicName")) cameraParamsMap_[COLOR_CAMERA_NAME].topic_name = _sdf->Get<std::string>("colorTopicName");
+  if (_sdf->HasElement("colorCameraInfoTopicName")) cameraParamsMap_[COLOR_CAMERA_NAME].camera_info_topic_name = _sdf->Get<std::string>("colorCameraInfoTopicName");
+  if (_sdf->HasElement("infrared1TopicName")) cameraParamsMap_[IRED1_CAMERA_NAME].topic_name = _sdf->Get<std::string>("infrared1TopicName");
+  if (_sdf->HasElement("infrared1CameraInfoTopicName")) cameraParamsMap_[IRED1_CAMERA_NAME].camera_info_topic_name = _sdf->Get<std::string>("infrared1CameraInfoTopicName");
+  if (_sdf->HasElement("infrared2TopicName")) cameraParamsMap_[IRED2_CAMERA_NAME].topic_name = _sdf->Get<std::string>("infrared2TopicName");
+  if (_sdf->HasElement("infrared2CameraInfoTopicName")) cameraParamsMap_[IRED2_CAMERA_NAME].camera_info_topic_name = _sdf->Get<std::string>("infrared2CameraInfoTopicName");
 
-  // Store a pointer to the this model
-  this->rsModel = _model;
+  if (_sdf->HasElement("colorOpticalframeName")) cameraParamsMap_[COLOR_CAMERA_NAME].optical_frame = _sdf->Get<std::string>("colorOpticalframeName");
+  if (_sdf->HasElement("depthOpticalframeName")) cameraParamsMap_[DEPTH_CAMERA_NAME].optical_frame = _sdf->Get<std::string>("depthOpticalframeName");
+  if (_sdf->HasElement("infrared1OpticalframeName")) cameraParamsMap_[IRED1_CAMERA_NAME].optical_frame = _sdf->Get<std::string>("infrared1OpticalframeName");
+  if (_sdf->HasElement("infrared2OpticalframeName")) cameraParamsMap_[IRED2_CAMERA_NAME].optical_frame = _sdf->Get<std::string>("infrared2OpticalframeName");
 
-  // Store a pointer to the world
-  this->world = this->rsModel->GetWorld();
+  if (_sdf->HasElement("rangeMinDepth")) rangeMinDepth_ = _sdf->Get<float>("rangeMinDepth");
+  if (_sdf->HasElement("rangeMaxDepth")) rangeMaxDepth_ = _sdf->Get<float>("rangeMaxDepth");
+  if (_sdf->HasElement("pointCloud")) pointCloud_ = _sdf->Get<bool>("pointCloud");
+  if (_sdf->HasElement("pointCloudTopicName")) pointCloudTopic_ = _sdf->Get<std::string>("pointCloudTopicName");
+  if (_sdf->HasElement("pointCloudCutoff")) pointCloudCutOff_ = _sdf->Get<double>("pointCloudCutoff");
+  if (_sdf->HasElement("pointCloudCutoffMax")) pointCloudCutOffMax_ = _sdf->Get<double>("pointCloudCutoffMax");
+  if (_sdf->HasElement("prefix")) this->prefix = _sdf->Get<std::string>("prefix");
 
-  // Sensors Manager
-  sensors::SensorManager * smanager = sensors::SensorManager::Instance();
+  // In Gazebo Harmonic, we need to explicitly know the gz-transport topics the native cameras publish.
+  if (_sdf->HasElement("gzDepthTopic")) cameraParamsMap_[DEPTH_CAMERA_NAME].gz_topic = _sdf->Get<std::string>("gzDepthTopic");
+  if (_sdf->HasElement("gzColorTopic")) cameraParamsMap_[COLOR_CAMERA_NAME].gz_topic = _sdf->Get<std::string>("gzColorTopic");
+  if (_sdf->HasElement("gzInfrared1Topic")) cameraParamsMap_[IRED1_CAMERA_NAME].gz_topic = _sdf->Get<std::string>("gzInfrared1Topic");
+  if (_sdf->HasElement("gzInfrared2Topic")) cameraParamsMap_[IRED2_CAMERA_NAME].gz_topic = _sdf->Get<std::string>("gzInfrared2Topic");
 
-  // Get Cameras Renderers
-  this->depthCam = std::dynamic_pointer_cast<sensors::DepthCameraSensor>(
-    smanager->GetSensor(prefix + DEPTH_CAMERA_NAME))
-    ->DepthCamera();
+  // Since we don't query the visual ECM renderer anymore to maintain sync, we get the known configured HFOVs
+  cameraParamsMap_[DEPTH_CAMERA_NAME].hfov = _sdf->HasElement("depthHFOV") ? _sdf->Get<double>("depthHFOV") : 1.57;
+  cameraParamsMap_[COLOR_CAMERA_NAME].hfov = _sdf->HasElement("colorHFOV") ? _sdf->Get<double>("colorHFOV") : 1.57;
+  cameraParamsMap_[IRED1_CAMERA_NAME].hfov = _sdf->HasElement("infraredHFOV") ? _sdf->Get<double>("infraredHFOV") : 1.57;
+  cameraParamsMap_[IRED2_CAMERA_NAME].hfov = cameraParamsMap_[IRED1_CAMERA_NAME].hfov;
 
-  this->ired1Cam = std::dynamic_pointer_cast<sensors::CameraSensor>(
-    smanager->GetSensor(prefix + IRED1_CAMERA_NAME))
-    ->Camera();
-  this->ired2Cam = std::dynamic_pointer_cast<sensors::CameraSensor>(
-    smanager->GetSensor(prefix + IRED2_CAMERA_NAME))
-    ->Camera();
-  this->colorCam = std::dynamic_pointer_cast<sensors::CameraSensor>(
-    smanager->GetSensor(prefix + COLOR_CAMERA_NAME))
-    ->Camera();
-
-  // Check if camera renderers have been found successfuly
-  if (!this->depthCam) {
-    std::cerr << "RealSensePlugin: Depth Camera has not been found"
-              << std::endl;
-    return;
+  // Subscribe to Gazebo transport topics natively
+  if (!cameraParamsMap_[DEPTH_CAMERA_NAME].gz_topic.empty()) {
+    this->transportNode.Subscribe(cameraParamsMap_[DEPTH_CAMERA_NAME].gz_topic, &RealSensePlugin::OnNewDepthFrame, this);
   }
-  if (!this->ired1Cam) {
-    std::cerr << "RealSensePlugin: InfraRed Camera 1 has not been found"
-              << std::endl;
-    return;
+  if (!cameraParamsMap_[COLOR_CAMERA_NAME].gz_topic.empty()) {
+    this->transportNode.Subscribe(cameraParamsMap_[COLOR_CAMERA_NAME].gz_topic, &RealSensePlugin::OnNewColorFrame, this);
   }
-  if (!this->ired2Cam) {
-    std::cerr << "RealSensePlugin: InfraRed Camera 2 has not been found"
-              << std::endl;
-    return;
+  if (!cameraParamsMap_[IRED1_CAMERA_NAME].gz_topic.empty()) {
+    this->transportNode.Subscribe(cameraParamsMap_[IRED1_CAMERA_NAME].gz_topic, &RealSensePlugin::OnNewInfrared1Frame, this);
   }
-  if (!this->colorCam) {
-    std::cerr << "RealSensePlugin: Color Camera has not been found"
-              << std::endl;
-    return;
+  if (!cameraParamsMap_[IRED2_CAMERA_NAME].gz_topic.empty()) {
+    this->transportNode.Subscribe(cameraParamsMap_[IRED2_CAMERA_NAME].gz_topic, &RealSensePlugin::OnNewInfrared2Frame, this);
   }
-
-  // Resize Depth Map dimensions
-  try {
-    this->depthMap.resize(
-      this->depthCam->ImageWidth() *
-      this->depthCam->ImageHeight());
-  } catch (std::bad_alloc & e) {
-    std::cerr << "RealSensePlugin: depthMap allocation failed: " << e.what()
-              << std::endl;
-    return;
-  }
-
-  // Setup Transport Node
-  this->transportNode = transport::NodePtr(new transport::Node());
-  this->transportNode->Init(this->world->Name());
-
-  // Setup Publishers
-  std::string rsTopicRoot = "~/" + this->rsModel->GetName();
-
-  this->depthPub = this->transportNode->Advertise<msgs::ImageStamped>(
-    rsTopicRoot + DEPTH_CAMERA_TOPIC, 1, depthUpdateRate_);
-  this->ired1Pub = this->transportNode->Advertise<msgs::ImageStamped>(
-    rsTopicRoot + IRED1_CAMERA_TOPIC, 1, infraredUpdateRate_);
-  this->ired2Pub = this->transportNode->Advertise<msgs::ImageStamped>(
-    rsTopicRoot + IRED2_CAMERA_TOPIC, 1, infraredUpdateRate_);
-  this->colorPub = this->transportNode->Advertise<msgs::ImageStamped>(
-    rsTopicRoot + COLOR_CAMERA_TOPIC, 1, colorUpdateRate_);
-
-  // Listen to depth camera new frame event
-  this->newDepthFrameConn = this->depthCam->ConnectNewDepthFrame(
-    std::bind(&RealSensePlugin::OnNewDepthFrame, this));
-
-  this->newIred1FrameConn = this->ired1Cam->ConnectNewImageFrame(
-    std::bind(
-      &RealSensePlugin::OnNewFrame, this, this->ired1Cam, this->ired1Pub));
-
-  this->newIred2FrameConn = this->ired2Cam->ConnectNewImageFrame(
-    std::bind(
-      &RealSensePlugin::OnNewFrame, this, this->ired2Cam, this->ired2Pub));
-
-  this->newColorFrameConn = this->colorCam->ConnectNewImageFrame(
-    std::bind(
-      &RealSensePlugin::OnNewFrame, this, this->colorCam, this->colorPub));
-
-  // Listen to the update event
-  this->updateConnection = event::Events::ConnectWorldUpdateBegin(
-    boost::bind(&RealSensePlugin::OnUpdate, this));
 }
 
-/////////////////////////////////////////////////
-void RealSensePlugin::OnNewFrame(
-  const rendering::CameraPtr cam,
-  const transport::PublisherPtr pub)
-{
-  msgs::ImageStamped msg;
+void RealSensePlugin::OnNewDepthFrame(const gz::msgs::Image & /*_msg*/) {}
+void RealSensePlugin::OnNewColorFrame(const gz::msgs::Image & /*_msg*/) {}
+void RealSensePlugin::OnNewInfrared1Frame(const gz::msgs::Image & /*_msg*/) {}
+void RealSensePlugin::OnNewInfrared2Frame(const gz::msgs::Image & /*_msg*/) {}
 
-  // Set Simulation Time
-  msgs::Set(msg.mutable_time(), this->world->SimTime());
-
-  // Set Image Dimensions
-  msg.mutable_image()->set_width(cam->ImageWidth());
-  msg.mutable_image()->set_height(cam->ImageHeight());
-
-  // Set Image Pixel Format
-  msg.mutable_image()->set_pixel_format(
-    common::Image::ConvertPixelFormat(cam->ImageFormat()));
-
-  // Set Image Data
-  msg.mutable_image()->set_step(cam->ImageWidth() * cam->ImageDepth());
-  msg.mutable_image()->set_data(
-    cam->ImageData(), cam->ImageDepth() *
-    cam->ImageWidth() *
-    cam->ImageHeight());
-
-  // Publish realsense infrared stream
-  pub->Publish(msg);
-}
-
-/////////////////////////////////////////////////
-void RealSensePlugin::OnNewDepthFrame()
-{
-  // Get Depth Map dimensions
-  unsigned int imageSize =
-    this->depthCam->ImageWidth() * this->depthCam->ImageHeight();
-
-  // Instantiate message
-  msgs::ImageStamped msg;
-
-  // Convert Float depth data to RealSense depth data
-  const float * depthDataFloat = this->depthCam->DepthData();
-  for (unsigned int i = 0; i < imageSize; ++i) {
-    // Check clipping and overflow
-    if (depthDataFloat[i] < rangeMinDepth_ ||
-      depthDataFloat[i] > rangeMaxDepth_ ||
-      depthDataFloat[i] > DEPTH_SCALE_M * UINT16_MAX ||
-      depthDataFloat[i] < 0)
-    {
-      this->depthMap[i] = 0;
-    } else {
-      this->depthMap[i] = (uint16_t)(depthDataFloat[i] / DEPTH_SCALE_M);
-    }
-  }
-
-  // Pack realsense scaled depth map
-  msgs::Set(msg.mutable_time(), this->world->SimTime());
-  msg.mutable_image()->set_width(this->depthCam->ImageWidth());
-  msg.mutable_image()->set_height(this->depthCam->ImageHeight());
-  msg.mutable_image()->set_pixel_format(common::Image::L_INT16);
-  msg.mutable_image()->set_step(
-    this->depthCam->ImageWidth() *
-    this->depthCam->ImageDepth());
-  msg.mutable_image()->set_data(
-    this->depthMap.data(),
-    sizeof(*this->depthMap.data()) * imageSize);
-
-  // Publish realsense scaled depth map
-  this->depthPub->Publish(msg);
-}
-
-/////////////////////////////////////////////////
-void RealSensePlugin::OnUpdate() {}
-
-}  // namespace gazebo
+}  // namespace realsense_gazebo_plugin

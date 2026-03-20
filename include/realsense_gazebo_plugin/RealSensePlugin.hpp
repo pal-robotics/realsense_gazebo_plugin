@@ -19,15 +19,13 @@
 #include <vector>
 #include <map>
 
-#include <gazebo/common/Plugin.hh>
-#include <gazebo/common/common.hh>
-#include <gazebo/physics/PhysicsTypes.hh>
-#include <gazebo/physics/physics.hh>
-#include <gazebo/rendering/DepthCamera.hh>
-#include <gazebo/sensors/sensors.hh>
-#include <sdf/sdf.hh>
+#include <gz/sim/System.hh>
+#include <gz/sim/Entity.hh>
+#include <gz/sim/Model.hh>
+#include <gz/transport/Node.hh>
+#include <gz/msgs/image.pb.h>
 
-namespace gazebo
+namespace realsense_gazebo_plugin
 {
 #define DEPTH_CAMERA_NAME "depth"
 #define COLOR_CAMERA_NAME "color"
@@ -36,97 +34,35 @@ namespace gazebo
 
 struct CameraParams
 {
-  CameraParams()
-  {
-  }
-
   std::string topic_name;
   std::string camera_info_topic_name;
   std::string optical_frame;
+  std::string gz_topic;
+  double hfov;
 };
 
-/// \brief A plugin that simulates Real Sense camera streams.
-class RealSensePlugin : public ModelPlugin
+/// \brief A plugin that simulates Real Sense camera streams via Gazebo Transport.
+class RealSensePlugin : public gz::sim::System,
+                        public gz::sim::ISystemConfigure
 {
-  /// \brief Constructor.
-
 public:
   RealSensePlugin();
+  ~RealSensePlugin() override;
 
-  /// \brief Destructor.
-  ~RealSensePlugin();
+  void Configure(const gz::sim::Entity &_entity,
+                 const std::shared_ptr<const sdf::Element> &_sdf,
+                 gz::sim::EntityComponentManager &_ecm,
+                 gz::sim::EventManager &_eventMgr) override;
 
-  // Documentation Inherited.
-  virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
-
-  /// \brief Callback for the World Update event.
-  void OnUpdate();
-
-  /// \brief Callback that publishes a received Depth Camera Frame as an
-  /// ImageStamped
-  /// message.
-  virtual void OnNewDepthFrame();
-
-  /// \brief Callback that publishes a received Camera Frame as an
-  /// ImageStamped message.
-  virtual void OnNewFrame(
-    const rendering::CameraPtr cam,
-    const transport::PublisherPtr pub);
+  virtual void OnNewDepthFrame(const gz::msgs::Image & _msg);
+  virtual void OnNewColorFrame(const gz::msgs::Image & _msg);
+  virtual void OnNewInfrared1Frame(const gz::msgs::Image & _msg);
+  virtual void OnNewInfrared2Frame(const gz::msgs::Image & _msg);
 
 protected:
-  /// \brief Pointer to the model containing the plugin.
-  physics::ModelPtr rsModel;
-
-  /// \brief Pointer to the world.
-  physics::WorldPtr world;
-
-  /// \brief Pointer to the Depth Camera Renderer.
-  rendering::DepthCameraPtr depthCam;
-
-  /// \brief Pointer to the Color Camera Renderer.
-  rendering::CameraPtr colorCam;
-
-  /// \brief Pointer to the Infrared Camera Renderer.
-  rendering::CameraPtr ired1Cam;
-
-  /// \brief Pointer to the Infrared2 Camera Renderer.
-  rendering::CameraPtr ired2Cam;
-
-  /// \brief String to hold the camera prefix
   std::string prefix;
-
-  /// \brief Pointer to the transport Node.
-  transport::NodePtr transportNode;
-
-  // \brief Store Real Sense depth map data.
+  gz::transport::Node transportNode;
   std::vector<uint16_t> depthMap;
-
-  /// \brief Pointer to the Depth Publisher.
-  transport::PublisherPtr depthPub;
-
-  /// \brief Pointer to the Color Publisher.
-  transport::PublisherPtr colorPub;
-
-  /// \brief Pointer to the Infrared Publisher.
-  transport::PublisherPtr ired1Pub;
-
-  /// \brief Pointer to the Infrared2 Publisher.
-  transport::PublisherPtr ired2Pub;
-
-  /// \brief Pointer to the Depth Camera callback connection.
-  event::ConnectionPtr newDepthFrameConn;
-
-  /// \brief Pointer to the Depth Camera callback connection.
-  event::ConnectionPtr newIred1FrameConn;
-
-  /// \brief Pointer to the Infrared Camera callback connection.
-  event::ConnectionPtr newIred2FrameConn;
-
-  /// \brief Pointer to the Color Camera callback connection.
-  event::ConnectionPtr newColorFrameConn;
-
-  /// \brief Pointer to the World Update event connection.
-  event::ConnectionPtr updateConnection;
 
   std::map<std::string, CameraParams> cameraParamsMap_;
 
@@ -141,4 +77,4 @@ protected:
   float rangeMinDepth_;
   float rangeMaxDepth_;
 };
-}  // namespace gazebo
+}  // namespace realsense_gazebo_plugin

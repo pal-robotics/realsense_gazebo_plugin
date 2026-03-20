@@ -27,67 +27,38 @@
 
 #include "realsense_gazebo_plugin/RealSensePlugin.hpp"
 
-namespace gazebo
+namespace realsense_gazebo_plugin
 {
-/// \brief A plugin that simulates Real Sense camera streams.
+
 class GazeboRosRealsense : public RealSensePlugin
 {
-  /// \brief Constructor.
-
 public:
   GazeboRosRealsense();
+  ~GazeboRosRealsense() override;
 
-  /// \brief Destructor.
+  void Configure(const gz::sim::Entity &_entity,
+                 const std::shared_ptr<const sdf::Element> &_sdf,
+                 gz::sim::EntityComponentManager &_ecm,
+                 gz::sim::EventManager &_eventMgr) override;
 
-public:
-  ~GazeboRosRealsense();
+  void OnNewDepthFrame(const gz::msgs::Image & _msg) override;
+  void OnNewColorFrame(const gz::msgs::Image & _msg) override;
+  void OnNewInfrared1Frame(const gz::msgs::Image & _msg) override;
+  void OnNewInfrared2Frame(const gz::msgs::Image & _msg) override;
 
-  // Documentation Inherited.
-
-public:
-  virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
-
-  /// \brief Callback that publishes a received Depth Camera Frame as an
-  /// ImageStamped message.
-
-public:
-  virtual void OnNewDepthFrame();
-
-  /// \brief Helper function to fill the pointcloud information
   bool FillPointCloudHelper(
-    sensor_msgs::msg::PointCloud2 & point_cloud_msg,
-    uint32_t rows_arg, uint32_t cols_arg,
-    uint32_t step_arg, const void * data_arg);
-
-  /// \brief Callback that publishes a received Camera Frame as an
-  /// ImageStamped message.
-
-public:
-  virtual void OnNewFrame(
-    const rendering::CameraPtr cam,
-    const transport::PublisherPtr pub);
+    sensor_msgs::msg::PointCloud2 & point_cloud_msg, uint32_t rows_arg,
+    uint32_t cols_arg, uint32_t step_arg, const void * data_arg);
 
 protected:
-  boost::shared_ptr<camera_info_manager::CameraInfoManager>
-  camera_info_manager_;
-
-  /// \brief A pointer to the ROS node.
-  ///  A node will be instantiated if it does not exist.
-
-protected:
+  std::shared_ptr<camera_info_manager::CameraInfoManager> camera_info_manager_;
   rclcpp::Node::SharedPtr node_;
-
-private:
   std::unique_ptr<point_cloud_transport::PointCloudTransport> pctnode_;
 
-protected:
   image_transport::CameraPublisher color_pub_, ir1_pub_, ir2_pub_, depth_pub_;
   point_cloud_transport::Publisher pointcloud_pub_;
 
-  /// \brief ROS image messages
-
-protected:
   sensor_msgs::msg::Image image_msg_, depth_msg_;
   sensor_msgs::msg::PointCloud2 pointcloud_msg_;
 };
-}  // namespace gazebo
+}  // namespace realsense_gazebo_plugin
