@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<package format="2">
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>realsense_gazebo_plugin</name>
   <version>3.2.0</version>
-  <description>Intel RealSense D435 Gazebo plugin package</description>
+  <description>Intel RealSense D435 Gazebo Harmonic plugin package for ROS 2 Jazzy</description>
 
   <maintainer email="sergey.dorodnicov@intel.com">Sergey Dorodnicov</maintainer>
   <maintainer email="doron.hirshberg@intel.com">Doron Hirshberg</maintainer>
@@ -21,18 +22,20 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>gazebo_ros</depend>
   <depend>rclcpp</depend>
   <depend>sensor_msgs</depend>
   <depend>image_transport</depend>
   <depend>point_cloud_transport</depend>
   <depend>camera_info_manager</depend>
+  <depend>gz_sim_vendor</depend>
+  <depend>gz_plugin_vendor</depend>
+  <depend>gz_transport_vendor</depend>
+  <depend>gz_msgs_vendor</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
-  
+
   <export>
-    <gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" gazebo_model_path="${prefix}/models" />
     <build_type>ament_cmake</build_type>
   </export>
 </package>
