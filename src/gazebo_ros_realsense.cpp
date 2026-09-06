@@ -57,7 +57,7 @@ void GazeboRosRealsense::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
 
 void GazeboRosRealsense::OnNewFrame(const rendering::CameraPtr cam,
                                     const transport::PublisherPtr pub) {
-  common::Time current_time = this->world->GetSimTime();
+  common::Time current_time = this->world->SimTime();
 
   // identify camera
   std::string camera_id = extractCameraName(cam->Name());
@@ -194,7 +194,7 @@ bool GazeboRosRealsense::FillPointCloudHelper(sensor_msgs::PointCloud2 &point_cl
 
 void GazeboRosRealsense::OnNewDepthFrame() {
   // get current time
-  common::Time current_time = this->world->GetSimTime();
+  common::Time current_time = this->world->SimTime();
 
   RealSensePlugin::OnNewDepthFrame();
 
@@ -227,7 +227,7 @@ void GazeboRosRealsense::OnNewDepthFrame() {
         this->pointcloud_msg_.point_step * this->depthCam->ImageWidth();
     FillPointCloudHelper(this->pointcloud_msg_, this->depthCam->ImageHeight(),
                          this->depthCam->ImageWidth(), 2 * this->depthCam->ImageWidth(),
-                         (void *)this->depthCam->GetDepthData());
+                         (void *)this->depthCam->DepthData());
     this->pointcloud_pub_.publish(this->pointcloud_msg_);
   }
 }
